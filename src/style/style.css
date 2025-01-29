@@ -1,0 +1,11 @@
+.sortButton:focus {
+  background-color: #9556ce;
+}
+
+.sortButton:active {
+  background-color: #9556ce; /* Same as focus or you can change it */
+}
+
+table {
+  background-color: pink;
+}
