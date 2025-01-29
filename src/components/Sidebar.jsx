@@ -41,7 +41,7 @@ function Sidebar() {
           <li className="mt-3">
             <Link
               className="text-decoration-none text-secondary fs-5"
-              to="/settings"
+              to="/setting"
             >
               <i className="me-2 bi bi-gear"></i> Settings
             </Link>
