@@ -1,7 +1,7 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
 
-function ReportPage() {
+function ProjectPage() {
   return (
     <>
       <main>
@@ -12,7 +12,7 @@ function ReportPage() {
             </div>
             <div className="col-md-10">
               <div className="container py-4">
-                <div>ReportPage</div>
+                <div>ProjectPage</div>
               </div>
             </div>
           </div>
@@ -22,4 +22,4 @@ function ReportPage() {
   );
 }
 
-export default ReportPage;
+export default ProjectPage;

@@ -6,6 +6,10 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
 import TeamsPage from "./pages/TeamsPage";
+import SettingPage from "./pages/SettingPage";
+import ReportPage from "./pages/ReportPage";
+import ProjectPage from "./pages/ProjectPage";
+import TeamDetailsPage from "./pages/TeamDetailsPage";
 
 function App() {
   return (
@@ -22,7 +26,19 @@ function App() {
             Sign Up
           </Route>
           <Route path="/team" element={<TeamsPage />}>
-            TeamsPage
+            Teams Page
+          </Route>
+          <Route path="/setting" element={<SettingPage />}>
+            Setting Page
+          </Route>
+          <Route path="/report" element={<ReportPage />}>
+            Report Page
+          </Route>
+          <Route path="/project" element={<ProjectPage />}>
+            Project Page
+          </Route>
+          <Route path="/team/:teamId" element={<TeamDetailsPage />}>
+            Team Details Page
           </Route>
         </Routes>
       </div>

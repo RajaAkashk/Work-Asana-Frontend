@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import ProjectView from "../features/projects/ProjectView";
-// import TaskView from "../features/projects/tasks/TaskView";
+import TaskView from "../features/tasks/TaskView.jsx";
 
 function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,27 +44,9 @@ function DashboardPage() {
                 </div>
 
                 <div className="py-5">
-                  <div className="align-items-center d-flex justify-content-between">
-                    <div>
-                      <span className="fs-2 fw-medium">Tasks</span>
-                      <select className="ms-3 rounded bg-body-tertiary p-1">
-                        <option value="">Filter</option>
-                        <option value="">In Progress</option>
-                        <option value="">Complete</option>
-                        <option value="">To-do</option>
-                        <option value="">Blocked</option>
-                      </select>
-                    </div>
-                    <div>
-                      <button className="btn btn-primary">
-                        <i className="bi bi-plus me-2"></i>New Task
-                      </button>
-                    </div>
-                  </div>
-
                   <div className="mt-4">
                     {/* Tasks  */}
-                    {/* <TaskView /> */}
+                    <TaskView />
                   </div>
                 </div>
               </div>

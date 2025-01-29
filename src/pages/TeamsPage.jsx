@@ -13,7 +13,6 @@ function TeamsPage() {
             </div>
             <div className="col-md-10">
               <div className="container py-4">
-                <div>TeamsPage</div>
                 <div>
                   <TeamView />
                 </div>
