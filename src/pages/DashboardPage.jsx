@@ -39,6 +39,7 @@ function DashboardPage() {
 
                 <div className="pt-4">
                   <div className="mt-4">
+                    {/* Projects  */}
                     <ProjectView />
                   </div>
                 </div>
