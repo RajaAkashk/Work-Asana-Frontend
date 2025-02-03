@@ -1,36 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchTasks } from "./taskSlice";
+import { useSearchParams } from "react-router-dom";
 
 function TaskView() {
-  const [selectedFilter, setSelectedFilter] = useState("");
-  const [taskList, setTaskList] = useState([]);
-
   const dispatch = useDispatch();
 
   const { tasks, status, error } = useSelector((state) => state.tasks);
 
-  useEffect(() => {
-    dispatch(fetchTasks());
-  }, [dispatch]);
+  const [searchParams, setSearchParams] = useSearchParams(); // URL Params Hook
+
+  const taskStatus = searchParams.get("taskStatus") || "";
 
   useEffect(() => {
-    if (selectedFilter) {
-      const filterTasks = tasks.filter(
-        (task) => task.status === selectedFilter
-      );
-      setTaskList(filterTasks);
+    dispatch(fetchTasks({ taskStatus }));
+  }, [taskStatus, dispatch]);
+
+  const statusFilterHandler = (value) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (value) {
+      newParams.set("taskStatus", value);
     } else {
-      setTaskList(tasks);
+      newParams.delete("taskStatus");
     }
-  }, [selectedFilter, tasks]);
-
-  const statusFilterHandler = (event) => {
-    event.preventDefault();
-    const { value } = event.target;
-    console.log("setSelectedFilter", value);
-    setSelectedFilter(value);
+    setSearchParams(newParams);
   };
+
+
+
+  const handleCreateProject = async (e) => {
+    e.preventDefault();
+    console.log("Create project button clicked!");
+    const newProject = {
+      name: projectName,
+      description: projectDescription,
+    };
+    console.log("New Project Data:", newProject);
+    await dispatch(createNewProject(newProject));
+    // reset the form
+    setShowForm(false);
+    // setProjectDescription("");
+    // setProjectName("");
+  };
+
 
   const getBadgeClass = (status) => {
     switch (status) {
@@ -53,8 +65,8 @@ function TaskView() {
         <div>
           <span className="fs-2 fw-medium">Tasks</span>
           <select
-            value={selectedFilter}
-            onChange={statusFilterHandler}
+            value={taskStatus}
+            onChange={(e) => statusFilterHandler(e.target.value)}
             className="ms-3 rounded bg-body-tertiary p-1"
           >
             <option value="">Filter</option>
@@ -74,10 +86,10 @@ function TaskView() {
         {error && <p>Error in fetching tasks</p>}
         {status === "loading" ? (
           <p>Loading...</p>
-        ) : taskList.length === 0 ? (
+        ) : tasks.length === 0 ? (
           <p className="fs-5 fw-medium">No Task found</p> // Display this message when there are no tasks
         ) : (
-          taskList.map((task) => (
+          tasks.map((task) => (
             <div className="col-md-4" key={task._id}>
               <div className="card h-100">
                 <div className="card-body">

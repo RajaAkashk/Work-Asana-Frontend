@@ -1,18 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchTeamById } from "../features/teams/teamSlice";
+import { fetchTeamById, addNewTeamMember } from "../features/teams/teamSlice";
 
 function TeamDetailsPage() {
+  const [newMember, setNewMember] = useState(""); // Temporary state for a new member
+  const [showForm, setShowForm] = useState(false);
+
   const { teamId } = useParams();
   const dispatch = useDispatch();
 
   const { teams, loading, error } = useSelector((state) => state.teams);
-  console.log("TEams memners:", teams);
+
   useEffect(() => {
     dispatch(fetchTeamById(teamId));
   }, [dispatch]);
+
+  const handleAddMember = (e) => {
+    e.preventDefault();
+    dispatch(
+      addNewTeamMember({
+        teamId: teamId,
+        newTeamMember: newMember,
+      })
+    );
+    // reset the form
+    setShowForm(false);
+    setNewMember("");
+  };
 
   return (
     <>
@@ -30,6 +46,54 @@ function TeamDetailsPage() {
                 >
                   <i class="bi bi-arrow-left"></i> Back to Teams
                 </Link>
+
+                {showForm && (
+                  <div className="overlay">
+                    <div className="form-container">
+                      <h3>Add a New Member</h3>
+
+                      <form onSubmit={handleAddMember}>
+                        <div className="my-3">
+                          <div>
+                            <label className="form-label fw-medium">
+                              Members Name
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control mb-2"
+                              value={newMember}
+                              onChange={(e) => setNewMember(e.target.value)} // Bind to the new member input
+                              placeholder="Member Name"
+                            />
+                          </div>
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="btn  fw-medium  w-100 mb-2"
+                          style={{
+                            background: "rgba(137, 19, 251, 0.07)",
+                            color: "#6818F1",
+                          }}
+                        >
+                          Add Member
+                        </button>
+
+                        <button
+                          className="btn text-secondary bg-secondary-subtle fw-medium w-100 mb-2"
+                          type="button"
+                          onClick={() => {
+                            setShowForm(false);
+                            setNewMember("");
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   {loading ? (
                     <p>Loading...</p>
@@ -37,7 +101,6 @@ function TeamDetailsPage() {
                     <p>Error in fetching data.</p>
                   ) : teams ? (
                     <div>
-                      {/* <h1>{teams.name}</h1> */}
                       <div
                         className="col-md-3 mt-5 h-100"
                         // style={{ background: "#f7eeff" }}
@@ -91,7 +154,10 @@ function TeamDetailsPage() {
                                 })}
                             </ul>
                           </div>
-                          <button className="btn btn-primary fs-6 fw-medium">
+                          <button
+                            onClick={() => setShowForm(true)}
+                            className="btn btn-primary fs-6 fw-medium"
+                          >
                             {" "}
                             <i className="bi bi-plus"></i> Member
                           </button>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Sidebar() {
   return (
@@ -9,42 +9,60 @@ function Sidebar() {
       </h2>
       <nav className="pt-5 px-5">
         <ul className="list-unstyled">
-          <li className="">
-            <Link className="text-decoration-none text-secondary fs-5" to="/">
+          <li>
+            <NavLink
+              to="/dashboard"
+              className="text-decoration-none fs-5"
+              style={({ isActive }) => ({
+                color: isActive ? "#6818F1" : "#a6a4a4",
+              })}
+            >
               <i className="bi bi-bounding-box"></i> Dashboard
-            </Link>
+            </NavLink>
           </li>
           <li className="mt-3">
-            <Link
-              className="text-decoration-none text-secondary fs-5"
+            <NavLink
               to="/project"
+              className="text-decoration-none fs-5"
+              style={({ isActive }) => ({
+                color: isActive ? "#6818F1" : "#a6a4a4",
+              })}
             >
               <i className="me-2 bi bi-file-earmark"></i> Project
-            </Link>
+            </NavLink>
           </li>
           <li className="mt-3">
-            <Link
-              className="text-decoration-none text-secondary fs-5"
+            <NavLink
               to="/team"
+              className="text-decoration-none fs-5"
+              style={({ isActive }) => ({
+                color: isActive ? "#6818F1" : "#a6a4a4",
+              })}
             >
               <i className="me-2 bi bi-person-lines-fill"></i> Team
-            </Link>
+            </NavLink>
           </li>
           <li className="mt-3">
-            <Link
-              className="text-decoration-none text-secondary fs-5"
+            <NavLink
               to="/report"
+              className="text-decoration-none fs-5"
+              style={({ isActive }) => ({
+                color: isActive ? "#6818F1" : "#a6a4a4",
+              })}
             >
               <i className="me-2 bi bi-bar-chart-fill"></i> Report
-            </Link>
+            </NavLink>
           </li>
           <li className="mt-3">
-            <Link
-              className="text-decoration-none text-secondary fs-5"
+            <NavLink
               to="/setting"
+              className="text-decoration-none fs-5"
+              style={({ isActive }) => ({
+                color: isActive ? "#6818F1" : "#a6a4a4",
+              })}
             >
               <i className="me-2 bi bi-gear"></i> Settings
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </nav>

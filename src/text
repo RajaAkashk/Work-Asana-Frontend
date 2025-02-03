@@ -1,32 +1,88 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { fetchTasks } from "../features/tasks/taskSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../style/style.css";
 
 function ProjectPage() {
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const [taskList, setTaskList] = useState([]);
+
   const dispatch = useDispatch();
+
   const { tasks, status, error } = useSelector((state) => state.tasks);
 
-  const [searchParams, setSearchParams] = useSearchParams(); // URL Params Hook
-
-  const taskStatus = searchParams.get("taskStatus") || "";
-  const prioritySort = searchParams.get("prioritySort") || "";
-  const dateSort = searchParams.get("dateSort") || "";
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchTasks({ taskStatus, prioritySort, dateSort }));
-  }, [taskStatus, prioritySort, dateSort, dispatch]);
-
-  const updateFilter = (key, value) => {
-    const newParams = new URLSearchParams(searchParams);
-    if (value) {
-      newParams.set(key, value);
+    if (selectedFilter) {
+      const filterTasks = tasks.filter(
+        (task) => task.status === selectedFilter
+      );
+      setTaskList(filterTasks);
     } else {
-      newParams.delete(key);
+      setTaskList(tasks);
     }
-    setSearchParams(newParams);
+  }, [selectedFilter, tasks]);
+
+  const statusFilterHandler = (event) => {
+    event.preventDefault();
+    const { value } = event.target;
+    console.log("setSelectedFilter", value);
+    setSelectedFilter(value);
+  };
+
+  const sortByHandler = (option) => {
+    console.log("Sort value:", option);
+
+    // Create a shallow copy of tasks to avoid mutating the original array
+    let sortedTasks = [...tasks];
+
+    // Define the priority mapping
+    const priorityMap = {
+      Low: 1,
+      Medium: 2,
+      High: 3,
+    };
+
+    switch (option) {
+      case "Priority High-Low":
+        // Sort descending: high -> medium -> low
+        sortedTasks = sortedTasks.sort(
+          (a, b) => priorityMap[b.priority] - priorityMap[a.priority]
+        );
+
+        break;
+      case "Priority Low-High":
+        // Sort ascending: low -> medium -> high
+        sortedTasks = sortedTasks.sort(
+          (a, b) => priorityMap[a.priority] - priorityMap[b.priority]
+        );
+
+        break;
+      case "Newest First":
+        sortedTasks = sortedTasks.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        ); // Sort descending based on createdAt date
+
+        break;
+      case "Oldest First":
+        sortedTasks = sortedTasks.sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        ); // Sort ascending based on createdAt date
+
+        break;
+      default:
+        sortedTasks = tasks; // If no sort option matches, return tasks as is
+    }
+
+    console.log("Sorted Tasks:", sortedTasks);
+
+    // Optionally, update state if using React
+    setTaskList(sortedTasks);
   };
 
   const getBadgeClass = (status) => {
@@ -63,59 +119,43 @@ function ProjectPage() {
 
                 <div className="p-4">
                   <div className="mb-2 d-flex flex-wrap justify-content-between">
-                    {/* Sort Buttons */}
                     <div>
                       <span className="fw-medium">Sort By: </span>
                       <button
-                        onClick={() => updateFilter("prioritySort", "Low-High")}
-                        className={`sortButton badge p-2 text-bg-light border ms-2 ${
-                          prioritySort === "Low-High" ? "active" : ""
-                        }`}
+                        onClick={() => sortByHandler("Priority Low-High")}
+                        className="sortButton badge p-2 text-bg-light border ms-2"
                       >
                         Priority Low-High
                       </button>
                       <button
-                        onClick={() => updateFilter("prioritySort", "High-Low")}
-                        className={`sortButton badge p-2 text-bg-light border ms-2 ${
-                          prioritySort === "High-Low" ? "active" : ""
-                        }`}
+                        onClick={() => sortByHandler("Priority High-Low")}
+                        className="sortButton badge p-2 text-bg-light border ms-2"
                       >
                         Priority High-Low
                       </button>
                       <button
-                        onClick={() =>
-                          updateFilter("dateSort", "Newest-Oldest")
-                        }
-                        className={`sortButton badge p-2 text-bg-light border ms-2 ${
-                          dateSort === "Newest-Oldest" ? "active" : ""
-                        }`}
+                        onClick={() => sortByHandler("Newest First")}
+                        className="sortButton badge p-2 text-bg-light border ms-2"
                       >
                         Newest First
                       </button>
                       <button
-                        onClick={() =>
-                          updateFilter("dateSort", "Oldest-Newest")
-                        }
-                        className={`sortButton badge p-2 text-bg-light border ms-2 ${
-                          dateSort === "Oldest-Newest" ? "active" : ""
-                        }`}
+                        onClick={() => sortByHandler("Oldest First")}
+                        className="sortButton badge p-2 text-bg-light border ms-2"
                       >
                         Oldest First
                       </button>
                     </div>
 
-                    {/* Filter Dropdown */}
                     <div className="d-flex align-items-center">
                       <select
-                        value={taskStatus}
-                        onChange={(e) =>
-                          updateFilter("taskStatus", e.target.value)
-                        }
+                        value={selectedFilter}
+                        onChange={statusFilterHandler}
                         className="form-select"
                       >
                         <option value="">Filter</option>
                         <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
+                        <option value="Complete">Complete</option>
                         <option value="To Do">To Do</option>
                         <option value="Blocked">Blocked</option>
                       </select>
@@ -124,27 +164,18 @@ function ProjectPage() {
                       </button>
                     </div>
                   </div>
-
-                  {/* Task List */}
                   <table className="table table-bordered">
-                    <thead>
+                    <thead
+                      style={{
+                        background: "pink",
+                      }}
+                    >
                       <tr>
-                        <th style={{ background: "#f7eeff", border: "0px" }}>
-                          TASKS
-                        </th>
-                        <th style={{ background: "#f7eeff", border: "0px" }}>
-                          OWNER
-                        </th>
-                        <th style={{ background: "#f7eeff", border: "0px" }}>
-                          PRIORITY
-                        </th>
-                        <th style={{ background: "#f7eeff", border: "0px" }}>
-                          DUE ON
-                        </th>
-                        <th
-                          style={{ background: "#f7eeff", border: "0px" }}
-                          colSpan={2}
-                        >
+                        <th className="px-4 py-2">TASKS</th>
+                        <th className="px-4 py-2">OWNER</th>
+                        <th className="px-4 py-2">PRIORITY</th>
+                        <th className="px-4 py-2">DUE ON</th>
+                        <th className="px-4 py-2" colSpan={2}>
                           STATUS
                         </th>
                       </tr>
@@ -152,26 +183,24 @@ function ProjectPage() {
                     <tbody>
                       {status === "loading" ? (
                         <tr>
-                          <td colSpan="5" className="text-center">
+                          <td colSpan="5" className="text-center py-3">
                             Loading...
                           </td>
                         </tr>
                       ) : error ? (
                         <tr>
-                          <td colSpan="5" className="text-center text-danger">
-                            Error fetching tasks
+                          <td
+                            colSpan="5"
+                            className="text-center text-danger py-3"
+                          >
+                            Error in getting data
                           </td>
                         </tr>
-                      ) : tasks.length > 0 ? (
-                        tasks.map((task) => (
-                          <tr key={task._id}>
-                            <td className="fw-medium pt-3">{task.name}</td>
-                            {/* <td> */}
-                            {/* {task.owners
-                                ?.map((owner) => owner.name)
-                                .join(", ")} */}
-
-                            <td className="px-4 pt-2 position-relative">
+                      ) : taskList.length > 0 ? (
+                        taskList.map((task, index) => (
+                          <tr key={index} className="border-b">
+                            <td className="px-4 pt-3 fw-medium">{task.name}</td>
+                            <td className="px-4 pt-3 position-relative">
                               <div className="d-flex gap-2">
                                 {Array.isArray(task.owners) &&
                                 task.owners.length > 0 ? (
@@ -227,7 +256,7 @@ function ProjectPage() {
                                 )}
                               </div>
                             </td>
-                            <td className="pt-3">
+                            <td className="px-4 pt-3">
                               <span
                                 className={`badge ${getBadgeClass(
                                   task.priority
@@ -236,11 +265,8 @@ function ProjectPage() {
                                 {task.priority}
                               </span>
                             </td>
-                            <td className="pt-3">
-                              {new Date(task.createdAt).toLocaleDateString(
-                                "en-gb"
-                              )}
-                              {/* <span className="fw-medium">
+                            <td className="px-4 pt-3">
+                              <span className="fw-medium">
                                 {new Date(
                                   new Date(task.createdAt).setDate(
                                     new Date(task.createdAt).getDate() +
@@ -251,9 +277,9 @@ function ProjectPage() {
                                   month: "short",
                                   year: "numeric",
                                 })}
-                              </span> */}
+                              </span>
                             </td>
-                            <td className="pt-3">
+                            <td className="px-4 pt-3">
                               <span
                                 className={`badge ${getBadgeClass(
                                   task.status
@@ -272,8 +298,8 @@ function ProjectPage() {
                         ))
                       ) : (
                         <tr>
-                          <td colSpan="5" className="text-center">
-                            No tasks found
+                          <td colSpan="5" className="text-center py-3">
+                            No Task Found
                           </td>
                         </tr>
                       )}
