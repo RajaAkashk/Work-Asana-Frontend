@@ -93,7 +93,7 @@ const ProjectView = () => {
                     type="text"
                     className="form-control mb-2"
                     value={projectName}
-                    onChange={(e) => setProjectName(e.target.value)} // Bind to the new member input
+                    onChange={(e) => setProjectName(e.target.value)} 
                     placeholder="Enter Project Name"
                   />
                 </div>
@@ -103,7 +103,7 @@ const ProjectView = () => {
                     type="text"
                     className="form-control mb-2"
                     value={projectDescription}
-                    onChange={(e) => setProjectDescription(e.target.value)} // Bind to the new member input
+                    onChange={(e) => setProjectDescription(e.target.value)} 
                     placeholder="Enter Project Description"
                   />
                 </div>
