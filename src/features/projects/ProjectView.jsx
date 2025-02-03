@@ -1,35 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProjects } from "./projectSlice";
+import { fetchProjects, createNewProject } from "./projectSlice";
+import { useSearchParams } from "react-router-dom";
 
 const ProjectView = () => {
-  const [selectedFilter, setSelectedFilter] = useState("");
-  const [projectList, setProjectList] = useState([]);
+  const [projectName, setProjectName] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
+  const [showForm, setShowForm] = useState(false);
 
   const dispatch = useDispatch();
   const { projects, status, error } = useSelector((state) => state.projects);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const projectStatus = searchParams.get("projectStatus") || "";
 
   useEffect(() => {
-    dispatch(fetchProjects());
-    setProjectList(projects);
-  }, [dispatch]);
+    dispatch(fetchProjects({ projectStatus }));
+    console.log("Project Data:", projects);
+  }, [dispatch, projectStatus]);
 
-  useEffect(() => {
-    if (selectedFilter) {
-      const filterProjects = projects.filter(
-        (project) => project.status === selectedFilter
-      );
-      setProjectList(filterProjects);
+  const handleCreateProject = async (e) => {
+    e.preventDefault();
+    console.log("Create project button clicked!");
+    const newProject = {
+      name: projectName,
+      description: projectDescription,
+    };
+    console.log("New Project Data:", newProject);
+    await dispatch(createNewProject(newProject));
+    // reset the form
+    setShowForm(false);
+  };
+
+  const statusFilterHandler = (value) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (value) {
+      newParams.set("projectStatus", value);
     } else {
-      setProjectList(projects);
+      newParams.delete("projectStatus");
     }
-  }, [selectedFilter, projects]);
-
-  const statusFilterHandler = (event) => {
-    event.preventDefault();
-    const { value } = event.target;
-    console.log("setSelectedFilter", value);
-    setSelectedFilter(value);
+    setSearchParams(newParams);
   };
 
   const getBadgeClass = (status) => {
@@ -53,8 +62,8 @@ const ProjectView = () => {
         <div>
           <span className="fs-2 fw-medium">Projects</span>
           <select
-            value={selectedFilter}
-            onChange={statusFilterHandler}
+            value={projectStatus}
+            onChange={(e) => statusFilterHandler(e.target.value)}
             className="ms-3 rounded bg-body-tertiary p-1"
           >
             <option value="">Filter</option>
@@ -65,18 +74,75 @@ const ProjectView = () => {
           </select>
         </div>
         <div>
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
             <i className="bi bi-plus me-2"></i>New Project
           </button>
         </div>
       </div>
+
+      {showForm && (
+        <div className="overlay">
+          <div className="form-container">
+            <h3>Create New Project</h3>
+
+            <form onSubmit={handleCreateProject}>
+              <div className="my-3">
+                <div>
+                  <label className="form-label fw-medium">Name</label>
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)} // Bind to the new member input
+                    placeholder="Enter Project Name"
+                  />
+                </div>
+                <div>
+                  <label className="form-label fw-medium">Description</label>
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    value={projectDescription}
+                    onChange={(e) => setProjectDescription(e.target.value)} // Bind to the new member input
+                    placeholder="Enter Project Description"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="btn  fw-medium  w-100 mb-2"
+                style={{
+                  background: "rgba(137, 19, 251, 0.07)",
+                  color: "#6818F1",
+                }}
+              >
+                Create Project
+              </button>
+
+              <button
+                className="btn text-secondary bg-secondary-subtle fw-medium w-100 mb-2"
+                type="button"
+                onClick={() => {
+                  setShowForm(false);
+                  setProjectDescription("");
+                  setProjectName("");
+                }}
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div className="row g-4 pt-4">
         {status === "loading" ? (
           <p>Loading...</p>
         ) : error ? (
           <p>Error in fetching projects</p>
-        ) : projectList.length > 0 ? (
-          projectList.map((project) => (
+        ) : projects.length > 0 ? (
+          projects.map((project) => (
             <div className="col-md-4" key={project._id}>
               <div className="card h-100">
                 <div className="card-body">
@@ -88,7 +154,9 @@ const ProjectView = () => {
                   <small className="card-text">
                     {" "}
                     <strong>Created At: </strong>
-                    {new Date(project.createdAt).toLocaleDateString()}
+                    {project.createdAt
+                      ? new Date(project.createdAt).toLocaleDateString()
+                      : "N/A"}
                   </small>
                 </div>
               </div>

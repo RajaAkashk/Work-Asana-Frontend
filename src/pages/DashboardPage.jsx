@@ -15,7 +15,7 @@ function DashboardPage() {
       <main>
         <div className="container-fluid">
           <div className="row justify-content-between flex-wrap">
-            <div className="col-md-2 ">
+            <div className="col-md-2">
               <Sidebar />
             </div>
             <div className="col-md-10 py-4">
