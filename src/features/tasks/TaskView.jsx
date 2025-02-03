@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchTasks } from "./taskSlice";
+import { fetchProjects } from "../projects/projectSlice";
+import { fetchTeams } from "../teams/teamSlice";
 import { useSearchParams } from "react-router-dom";
 
 function TaskView() {
+  const [taskName, setTaskName] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [teamName, setTeamName] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [estimatedTime, setEstimatedTime] = useState("");
+  const [showForm, setShowForm] = useState(false);
+
   const dispatch = useDispatch();
 
   const { tasks, status, error } = useSelector((state) => state.tasks);
+  const { projects } = useSelector((state) => state.projects);
+  const { teams } = useSelector((state) => state.teams);
+
+  console.log("Teams from Task View", teams);
+  console.log("projects from Task View", projects);
 
   const [searchParams, setSearchParams] = useSearchParams(); // URL Params Hook
 
@@ -14,6 +28,7 @@ function TaskView() {
 
   useEffect(() => {
     dispatch(fetchTasks({ taskStatus }));
+    dispatch(fetchTeams());
   }, [taskStatus, dispatch]);
 
   const statusFilterHandler = (value) => {
@@ -26,23 +41,29 @@ function TaskView() {
     setSearchParams(newParams);
   };
 
-
-
   const handleCreateProject = async (e) => {
     e.preventDefault();
     console.log("Create project button clicked!");
     const newProject = {
-      name: projectName,
+      name: taskName,
+      project: projectName,
+      team: teamName,
+      owners: taskName,
+      name: taskName,
+      name: taskName,
       description: projectDescription,
     };
     console.log("New Project Data:", newProject);
     await dispatch(createNewProject(newProject));
     // reset the form
     setShowForm(false);
-    // setProjectDescription("");
-    // setProjectName("");
+    setShowForm(false);
+    setEstimatedTime("");
+    setDueDate("");
+    setTeamName("");
+    setTaskName("");
+    setProjectName("");
   };
-
 
   const getBadgeClass = (status) => {
     switch (status) {
@@ -77,11 +98,115 @@ function TaskView() {
           </select>
         </div>
         <div>
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
             <i className="bi bi-plus me-2"></i>New Task
           </button>
         </div>
       </div>
+
+      {showForm && (
+        <div className="overlay">
+          <div className="form-container">
+            <h3>Create New Task</h3>
+
+            <form onSubmit={handleCreateProject}>
+              <div className="my-3">
+                <div className="mb-3">
+                  <label className="form-label fw-medium">Select Project</label>
+                  <select
+                    className="form-select"
+                    onChange={(e) => setProjectName(e.target.value)}
+                  >
+                    <option value="">select</option>
+                    {projects.length === 0
+                      ? "Loading..."
+                      : projects.map((project) => (
+                          <option value={project._id}>{project.name}</option>
+                        ))}
+                  </select>
+                </div>
+                <div className="mb-3">
+                  <label className="form-label fw-medium">Task Name</label>
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    value={projectName}
+                    onChange={(e) => setTaskName(e.target.value)} // Bind to the new member input
+                    placeholder="Enter Task Name"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label fw-medium">Select Team</label>
+                  <select
+                    className="form-select"
+                    onChange={(e) => setTeamName(e.target.value)}
+                  >
+                    <option value="">select</option>
+                    {tasks.length === 0
+                      ? "Loading..."
+                      : tasks.map((task) => (
+                          <option value={task._id}>{task.name}</option>
+                        ))}
+                  </select>
+                </div>
+                <div className="row">
+                  <div className="col-md-6">
+                    <label className="form-label fw-medium">
+                      Select Due Date
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control mb-2"
+                      value={dueDate}
+                      onChange={(e) => setDueDate(e.target.value)}
+                      placeholder="Select Date"
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label fw-medium">
+                      Estimated Time
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      value={estimatedTime}
+                      onChange={(e) => setEstimatedTime(e.target.value)}
+                      placeholder="Enter Time in Days"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="btn  fw-medium  w-100 mb-2"
+                style={{
+                  background: "rgba(137, 19, 251, 0.07)",
+                  color: "#6818F1",
+                }}
+              >
+                Create Task
+              </button>
+
+              <button
+                className="btn text-secondary bg-secondary-subtle fw-medium w-100 mb-2"
+                type="button"
+                onClick={() => {
+                  setShowForm(false);
+                  setEstimatedTime("");
+                  setDueDate("");
+                  setTeamName("");
+                  setTaskName("");
+                  setProjectName("");
+                }}
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div className="row g-4 pt-4">
         {error && <p>Error in fetching tasks</p>}
         {status === "loading" ? (
