@@ -15,7 +15,7 @@ const ProjectView = () => {
 
   useEffect(() => {
     dispatch(fetchProjects({ projectStatus }));
-    console.log("Project Data:", projects);
+    // console.log("Project Data:", projects);
   }, [dispatch, projectStatus]);
 
   const handleCreateProject = async (e) => {

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchTasks } from "./taskSlice";
+import { fetchTasks, createNewTask } from "./taskSlice";
 import { fetchProjects } from "../projects/projectSlice";
 import { fetchTeams } from "../teams/teamSlice";
 import { useSearchParams } from "react-router-dom";
+import { fetchTags } from "../tags/tagSlice";
+import { fetchUser } from "../users/userSlice";
 
 function TaskView() {
   const [taskName, setTaskName] = useState("");
   const [projectName, setProjectName] = useState("");
+  const [ownerName, setOwnerName] = useState("");
+  // const [tag, setTags] = useState([]);
   const [teamName, setTeamName] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [estimatedTime, setEstimatedTime] = useState("");
@@ -16,11 +20,14 @@ function TaskView() {
   const dispatch = useDispatch();
 
   const { tasks, status, error } = useSelector((state) => state.tasks);
+  console.log("Tasks ", tasks);
+  // const { tags } = useSelector((state) => state.tags);
+  const { users } = useSelector((state) => state.users);
   const { projects } = useSelector((state) => state.projects);
   const { teams } = useSelector((state) => state.teams);
 
-  console.log("Teams from Task View", teams);
-  console.log("projects from Task View", projects);
+  // console.log("Teams from Task View", teams);
+  // console.log("projects from Task View", projects);
 
   const [searchParams, setSearchParams] = useSearchParams(); // URL Params Hook
 
@@ -29,7 +36,12 @@ function TaskView() {
   useEffect(() => {
     dispatch(fetchTasks({ taskStatus }));
     dispatch(fetchTeams());
+    // dispatch(fetchTags());
+    dispatch(fetchUser());
   }, [taskStatus, dispatch]);
+
+  // console.log("fetch Tags from task view: ", tags);
+  // console.log("fetch User from task view: ", users);
 
   const statusFilterHandler = (value) => {
     const newParams = new URLSearchParams(searchParams);
@@ -44,24 +56,26 @@ function TaskView() {
   const handleCreateProject = async (e) => {
     e.preventDefault();
     console.log("Create project button clicked!");
-    const newProject = {
+    const newTask = {
       name: taskName,
       project: projectName,
       team: teamName,
-      owners: taskName,
-      name: taskName,
-      name: taskName,
-      description: projectDescription,
+      tags: ["development"],
+      owners: [ownerName],
+      timeToComplete: estimatedTime,
+      status: "To Do",
+      priority: "Low",
     };
-    console.log("New Project Data:", newProject);
-    await dispatch(createNewProject(newProject));
+    console.log("New task Data:", newTask);
+    await dispatch(createNewTask(newTask));
     // reset the form
-    setShowForm(false);
     setShowForm(false);
     setEstimatedTime("");
     setDueDate("");
     setTeamName("");
     setTaskName("");
+    setOwnerName("");
+    // setTag([]);
     setProjectName("");
   };
 
@@ -121,36 +135,78 @@ function TaskView() {
                     {projects.length === 0
                       ? "Loading..."
                       : projects.map((project) => (
-                          <option value={project._id}>{project.name}</option>
+                          <option key={project._id} value={project._id}>
+                            {project.name}
+                          </option>
                         ))}
                   </select>
                 </div>
-                <div className="mb-3">
-                  <label className="form-label fw-medium">Task Name</label>
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    value={projectName}
-                    onChange={(e) => setTaskName(e.target.value)} // Bind to the new member input
-                    placeholder="Enter Task Name"
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label fw-medium">Select Team</label>
-                  <select
-                    className="form-select"
-                    onChange={(e) => setTeamName(e.target.value)}
-                  >
-                    <option value="">select</option>
-                    {tasks.length === 0
-                      ? "Loading..."
-                      : tasks.map((task) => (
-                          <option value={task._id}>{task.name}</option>
-                        ))}
-                  </select>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
+                <div className="row flex-wrap">
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label fw-medium">Select Owner</label>
+                    <select
+                      className="form-select"
+                      onChange={(e) => setOwnerName([e.target.value])}
+                    >
+                      <option value="">select</option>
+                      {users.length === 0
+                        ? "Loading..."
+                        : users.map((user) => (
+                            <option key={user._id} value={user._id}>
+                              {user.name}
+                            </option>
+                          ))}
+                    </select>
+                  </div>
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label fw-medium">Task Name</label>
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      // value={taskName}
+                      onChange={(e) => setTaskName(e.target.value)} // Bind to the new member input
+                      placeholder="Enter Task Name"
+                    />
+                  </div>
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label fw-medium">Select Team</label>
+                    <select
+                      className="form-select"
+                      onChange={(e) => setTeamName(e.target.value)}
+                    >
+                      <option value="">select</option>
+                      {teams.length === 0
+                        ? "Loading..."
+                        : teams.map((team) => (
+                            <option key={team._id} value={team._id}>
+                              {team.name}
+                            </option>
+                          ))}
+                    </select>
+                  </div>
+                  {/* <div className="mb-3 col-md-6">
+                    <label className="form-label fw-medium">Select Tags</label>
+                    <select
+                      className="form-select"
+                      multiple
+                      onChange={(e) =>
+                        setTag(
+                          [...e.target.value].map((option) => option.value)
+                        )
+                      }
+                    >
+                      <option>Select</option>
+                      {tags.length === 0
+                        ? "Loading..."
+                        : tags.map((tag) => (
+                            <option key={tag._id} value={tag.name}>
+                              {tag.name}
+                            </option>
+                          ))}
+                    </select>
+                  </div> */}
+
+                  {/* <div className="col-md-6">
                     <label className="form-label fw-medium">
                       Select Due Date
                     </label>
@@ -161,7 +217,7 @@ function TaskView() {
                       onChange={(e) => setDueDate(e.target.value)}
                       placeholder="Select Date"
                     />
-                  </div>
+                  </div> */}
                   <div className="col-md-6">
                     <label className="form-label fw-medium">
                       Estimated Time
@@ -170,7 +226,7 @@ function TaskView() {
                       type="text"
                       className="form-control mb-2"
                       value={estimatedTime}
-                      onChange={(e) => setEstimatedTime(e.target.value)}
+                      onChange={(e) => setEstimatedTime(Number(e.target.value))}
                       placeholder="Enter Time in Days"
                     />
                   </div>
@@ -197,6 +253,8 @@ function TaskView() {
                   setDueDate("");
                   setTeamName("");
                   setTaskName("");
+                  setOwnerName("");
+                  setTag("");
                   setProjectName("");
                 }}
               >
@@ -218,10 +276,11 @@ function TaskView() {
             <div className="col-md-4" key={task._id}>
               <div className="card h-100">
                 <div className="card-body">
-                  <span className={`badge ${getBadgeClass(task.status)}`}>
-                    {task.status}
+                  <span
+                    className={`badge ${getBadgeClass(task.status || "To Do")}`}
+                  >
+                    {task.status || "To Do"}
                   </span>
-
                   <div>
                     <h5 className="card-text mt-3">{task.name}</h5>
                     <small className="fw-normal">
