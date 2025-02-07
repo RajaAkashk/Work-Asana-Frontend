@@ -6,6 +6,13 @@
   background-color: #9556ce; /* Same as focus or you can change it */
 }
 
+.primaryColor {
+  color: rgb(104, 24, 241);
+}
+
+.primaryBgColor {
+  background-color: rgba(137, 19, 251, 0.03);
+}
 /* Style for overlay background */
 .overlay {
   position: fixed;
@@ -28,4 +35,11 @@
   border-radius: 8px;
   width: 400px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.editAndDeleteBtn:hover {
+  background-color: #6818f185;
+}
+.editAndDeleteBtn {
+  background-color: #8913fb12;
 }

@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const fetchProjects = createAsyncThunk(
   "fetch/fetchProjects",
-  async ({ projectStatus }) => {
+  async (projectStatus) => {
     try {
       const queryParams = new URLSearchParams();
 
@@ -12,6 +12,7 @@ export const fetchProjects = createAsyncThunk(
       const response = await axios.get(
         `https://work-asana-backend.vercel.app/api/projects?${queryParams.toString()}`
       );
+      // console.log("response from project slice", response.data);
       return response.data;
     } catch (error) {
       throw error.response?.data?.message || "Failed to fetch projects";
@@ -37,6 +38,25 @@ export const createNewProject = createAsyncThunk(
   }
 );
 
+export const deleteProject = createAsyncThunk(
+  "delete/deleteProject",
+  async (projectId) => {
+    try {
+      const response = await axios.delete(
+        `https://work-asana-backend.vercel.app/api/projects/${projectId}`
+      );
+      if (!response) {
+        return "Failed to delete project";
+      }
+      console.log("response.data while deleting project", response.data);
+      return response.data;
+    } catch (error) {
+      console.log("Error occured while deleting project", error);
+      return "Error in deleting project";
+    }
+  }
+);
+
 export const projectSlice = createSlice({
   name: "projects",
   initialState: {
@@ -55,7 +75,7 @@ export const projectSlice = createSlice({
     });
     builder.addCase(fetchProjects.rejected, (state, action) => {
       state.status = "error";
-      state.error = action.payload;
+      state.error = action.error.message;
     });
     //**********add New Project
     builder.addCase(createNewProject.pending, (state) => {
@@ -67,7 +87,22 @@ export const projectSlice = createSlice({
     });
     builder.addCase(createNewProject.rejected, (state, action) => {
       state.status = "error";
-      state.error = action.payload;
+      state.error = action.error.message;
+    });
+    //**********Deleted a Project
+    builder.addCase(deleteProject.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(deleteProject.fulfilled, (state, action) => {
+      state.status = "success";
+      console.log("deleteProject", action.payload);
+      state.projects = state.projects.filter(
+        (project) => project._id !== action.payload._id
+      );
+    });
+    builder.addCase(deleteProject.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
     });
   },
 });

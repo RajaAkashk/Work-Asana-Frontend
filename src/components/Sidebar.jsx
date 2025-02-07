@@ -3,7 +3,10 @@ import { NavLink } from "react-router-dom";
 
 function Sidebar() {
   return (
-    <div className="w-100 py-4 vh-100" style={{ background: "#8913fb12" }}>
+    <div
+      className="w-100 py-4"
+      style={{ background: "#8913fb12", minHeight: "100vh" }}
+    >
       <h2 className="text-center" style={{ color: "#6818f1" }}>
         Workasana
       </h2>

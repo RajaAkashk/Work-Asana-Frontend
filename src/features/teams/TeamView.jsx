@@ -8,7 +8,7 @@ function TeamView() {
   const [teamName, setTeamName] = useState("");
   const [members, setMembers] = useState([]); // Members as an array
   const [newMember, setNewMember] = useState(""); // Temporary state for a new member
-  const [showForm, setShowForm] = useState(false); 
+  const [showForm, setShowForm] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -17,12 +17,13 @@ function TeamView() {
   useEffect(() => {
     dispatch(fetchTeams());
   }, [dispatch]);
+  console.log("teams TeamView", teams);
 
   // Handle adding new member
   const handleAddMember = () => {
     if (newMember && !members.includes(newMember)) {
-      setMembers((prev) => [...prev, newMember]); 
-      setNewMember(""); 
+      setMembers((prev) => [...prev, newMember]);
+      setNewMember("");
     }
   };
 
@@ -194,7 +195,7 @@ function TeamView() {
           ))}
         </div>
       ) : (
-        <p>No teams available.</p>
+        <p>There are no  teams.</p>
       )}
     </div>
   );
