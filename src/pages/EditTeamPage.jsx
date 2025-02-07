@@ -68,8 +68,6 @@ function EditTeamPage() {
     }, 1000);
   };
 
-  console.log("Updated members:", editedMembers);
-
   return (
     <main>
       <div className="container-fluid">
