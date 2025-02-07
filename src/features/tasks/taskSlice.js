@@ -14,7 +14,7 @@ export const fetchTasks = createAsyncThunk(
       const response = await axios.get(
         `https://work-asana-backend.vercel.app/api/tasks?${queryParams.toString()}`
       );
-
+      console.log("Fetched tasks:", response.data);
       return response.data;
     } catch (error) {
       throw error.response?.data?.message || "Failed to fetch tasks";
@@ -30,12 +30,31 @@ export const createNewTask = createAsyncThunk(
         "https://work-asana-backend.vercel.app/api/tasks",
         newTask
       );
+      console.log("NEW Task", newTask);
       if (!response) {
         return "Failed to create new task";
       }
       return response.data.savedTask;
     } catch (error) {
       console.log("error in creating new task", error);
+    }
+  }
+);
+
+export const deleteTask = createAsyncThunk(
+  "delete/deleteTask",
+  async (taskId) => {
+    try {
+      const response = await axios.delete(
+        `https://work-asana-backend.vercel.app/api/tasks/${taskId}`
+      );
+      if (!response) {
+        return "Failed to delete task";
+      }
+      console.log("response data from delete task:", response.data);
+      return response.data;
+    } catch (error) {
+      console.log("error in deleting task", error);
     }
   }
 );
@@ -55,22 +74,43 @@ export const taskSlice = createSlice({
     builder.addCase(fetchTasks.fulfilled, (state, action) => {
       state.status = "success";
       state.tasks = action.payload;
+      console.log("fetch check action :", action.payload);
     });
     builder.addCase(fetchTasks.rejected, (state, action) => {
       state.status = "error";
-      state.error = action.payload;
+      state.error = action.error.message;
     });
     // create New Task
     builder.addCase(createNewTask.pending, (state) => {
       state.status = "loading";
     });
     builder.addCase(createNewTask.fulfilled, (state, action) => {
-      state.status = "success";
-      state.tasks.push(action.payload);
+      if (action.payload) {
+        state.status = "success";
+        console.log("action.payload of task view: ", action.payload);
+        state.tasks.push(action.payload);
+      } else {
+        console.error("Received an invalid payload");
+      }
     });
     builder.addCase(createNewTask.rejected, (state, action) => {
       state.status = "error";
-      state.error = action.payload;
+      state.error = action.error.message;
+    });
+    // delete a Task
+    builder.addCase(deleteTask.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(deleteTask.fulfilled, (state, action) => {
+      state.status = "success";
+      state.tasks = state.tasks.filter(
+        (task) => task._id !== action.payload.deletedTask._id
+      );
+      console.log("action.payload of deleteTask: ", action.payload.deletedTask);
+    });
+    builder.addCase(deleteTask.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
     });
   },
 });

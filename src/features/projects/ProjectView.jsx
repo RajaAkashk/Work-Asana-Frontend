@@ -14,9 +14,10 @@ const ProjectView = () => {
   const projectStatus = searchParams.get("projectStatus") || "";
 
   useEffect(() => {
-    dispatch(fetchProjects({ projectStatus }));
-    // console.log("Project Data:", projects);
+    dispatch(fetchProjects(projectStatus));
   }, [dispatch, projectStatus]);
+
+  // console.log("Project Data:", projects);
 
   const handleCreateProject = async (e) => {
     e.preventDefault();
@@ -93,7 +94,7 @@ const ProjectView = () => {
                     type="text"
                     className="form-control mb-2"
                     value={projectName}
-                    onChange={(e) => setProjectName(e.target.value)} 
+                    onChange={(e) => setProjectName(e.target.value)}
                     placeholder="Enter Project Name"
                   />
                 </div>
@@ -103,7 +104,7 @@ const ProjectView = () => {
                     type="text"
                     className="form-control mb-2"
                     value={projectDescription}
-                    onChange={(e) => setProjectDescription(e.target.value)} 
+                    onChange={(e) => setProjectDescription(e.target.value)}
                     placeholder="Enter Project Description"
                   />
                 </div>
@@ -163,7 +164,7 @@ const ProjectView = () => {
             </div>
           ))
         ) : (
-          <p className="fs-5 fw-medium">No Project Found</p>
+          <p className="fs-5 fw-medium">There are no Project</p>
         )}
       </div>
     </div>

@@ -10,6 +10,7 @@ import SettingPage from "./pages/SettingPage";
 import ReportPage from "./pages/ReportPage";
 import ProjectPage from "./pages/ProjectPage";
 import TeamDetailsPage from "./pages/TeamDetailsPage";
+import EditTeamPage from "./pages/EditTeamPage";
 
 function App() {
   return (
@@ -38,6 +39,9 @@ function App() {
             Project Page
           </Route>
           <Route path="/team/:teamId" element={<TeamDetailsPage />}>
+            Team Details Page
+          </Route>
+          <Route path="/edit-team/:teamId" element={<EditTeamPage />}>
             Team Details Page
           </Route>
         </Routes>

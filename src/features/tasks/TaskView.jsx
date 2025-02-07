@@ -38,6 +38,13 @@ function TaskView() {
     dispatch(fetchTeams());
     // dispatch(fetchTags());
     dispatch(fetchUser());
+    dispatch(
+      fetchTasks({
+        taskStatus: "",
+        prioritySort: "",
+        dateSort: "",
+      })
+    );
   }, [taskStatus, dispatch]);
 
   // console.log("fetch Tags from task view: ", tags);
@@ -67,6 +74,10 @@ function TaskView() {
       priority: "Low",
     };
     console.log("New task Data:", newTask);
+    console.log("Owners before sending:", newTask.owners);
+    console.log("Is owners an array?", Array.isArray(newTask.owners));
+    console.log("Is owners[0] an array?", Array.isArray(newTask.owners[0]));
+
     await dispatch(createNewTask(newTask));
     // reset the form
     setShowForm(false);
@@ -146,7 +157,7 @@ function TaskView() {
                     <label className="form-label fw-medium">Select Owner</label>
                     <select
                       className="form-select"
-                      onChange={(e) => setOwnerName([e.target.value])}
+                      onChange={(e) => setOwnerName(e.target.value)}
                     >
                       <option value="">select</option>
                       {users.length === 0
@@ -270,36 +281,42 @@ function TaskView() {
         {status === "loading" ? (
           <p>Loading...</p>
         ) : tasks.length === 0 ? (
-          <p className="fs-5 fw-medium">No Task found</p> // Display this message when there are no tasks
+          <p className="fs-5 fw-medium">There are no Tasks</p> // Display this message when there are no tasks
         ) : (
           tasks.map((task) => (
-            <div className="col-md-4" key={task._id}>
+            <div className="col-md-4" key={task?._id}>
               <div className="card h-100">
                 <div className="card-body">
                   <span
-                    className={`badge ${getBadgeClass(task.status || "To Do")}`}
+                    className={`badge ${getBadgeClass(
+                      task?.status || "To Do"
+                    )}`}
                   >
-                    {task.status || "To Do"}
+                    {task?.status || "To Do"}
                   </span>
                   <div>
-                    <h5 className="card-text mt-3">{task.name}</h5>
+                    <h5 className="card-text mt-3">{task?.name}</h5>
                     <small className="fw-normal">
                       <strong>Due On: </strong>
                       {new Date(
-                        new Date(task.createdAt).setDate(
-                          new Date(task.createdAt).getDate() +
-                            task.timeToComplete
+                        new Date(task?.createdAt).setDate(
+                          new Date(task?.createdAt).getDate() +
+                            task?.timeToComplete
                         )
                       ).toLocaleDateString()}
                     </small>
                   </div>
                   <div className="mt-3">
-                    {Array.isArray(task.owners) && task.owners.length > 0 ? (
-                      task.owners.map((member) => {
-                        const initials = member.name
-                          .split(" ")
-                          .map((name) => name[0].toUpperCase())
-                          .join("");
+                    {Array.isArray(task?.owners) && task?.owners.length > 0 ? (
+                      task?.owners.map((member) => {
+                        // Ensure `member.name` is a string before calling `.split()`
+                        const initials =
+                          typeof member.name === "string"
+                            ? member.name
+                                .split(" ")
+                                .map((name) => name[0].toUpperCase())
+                                .join("")
+                            : ""; // Default to an empty string if `member.name` isn't valid
 
                         return (
                           <div
@@ -323,8 +340,8 @@ function TaskView() {
                             data-bs-custom-class="custom-tooltip"
                             data-bs-title="This top tooltip is themed via CSS variables."
                           >
-                            {initials}{" "}
-                            {task.owners.length === 1 && (
+                            {initials}
+                            {task?.owners.length === 1 && (
                               <span
                                 style={{
                                   position: "absolute",
@@ -334,7 +351,7 @@ function TaskView() {
                                   color: "#000",
                                 }}
                               >
-                                {task.owners[0].name}
+                                {task?.owners[0].name}
                               </span>
                             )}
                           </div>
