@@ -52,7 +52,7 @@ export const tagSlice = createSlice({
     });
     builder.addCase(fetchTags.rejected, (state, action) => {
       state.status = "error";
-      state.error = action.payload;
+      state.error = action.error.message;
     });
     // Add a new tag
     builder.addCase(createNewTag.pending, (state) => {
@@ -64,7 +64,7 @@ export const tagSlice = createSlice({
     });
     builder.addCase(createNewTag.rejected, (state, action) => {
       state.status = "error";
-      state.error = action.payload;
+      state.error = action.error.message;
     });
   },
 });

@@ -178,7 +178,7 @@ function SettingPage() {
                             </span>
                             <span className="col-md-5">
                               <Link
-                                to={`/edit/task/${task.Id}`}
+                                to={`/edit/task/${task._id}`}
                                 className="btn me-2 editAndDeleteBtn"
                               >
                                 <i class="bi bi-pencil-square"></i>

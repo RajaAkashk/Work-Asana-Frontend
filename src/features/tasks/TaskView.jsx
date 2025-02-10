@@ -11,11 +11,11 @@ function TaskView() {
   const [taskName, setTaskName] = useState("");
   const [projectName, setProjectName] = useState("");
   const [ownerName, setOwnerName] = useState("");
-  // const [tag, setTags] = useState([]);
   const [teamName, setTeamName] = useState("");
-  const [dueDate, setDueDate] = useState("");
   const [estimatedTime, setEstimatedTime] = useState("");
   const [showForm, setShowForm] = useState(false);
+  // const [dueDate, setDueDate] = useState("");
+  // const [tag, setTags] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -80,14 +80,14 @@ function TaskView() {
 
     await dispatch(createNewTask(newTask));
     // reset the form
-    setShowForm(false);
     setEstimatedTime("");
-    setDueDate("");
     setTeamName("");
     setTaskName("");
     setOwnerName("");
-    // setTag([]);
     setProjectName("");
+    setShowForm(false);
+    // setTag([]);
+    // setDueDate("");
   };
 
   const getBadgeClass = (status) => {

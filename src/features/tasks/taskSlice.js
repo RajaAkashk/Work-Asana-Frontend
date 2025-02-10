@@ -59,6 +59,23 @@ export const deleteTask = createAsyncThunk(
   }
 );
 
+// Fetch task by ID
+export const fetchTaskById = createAsyncThunk(
+  "get/fetchTaskById",
+  async (taskId) => {
+    try {
+      const response = await axios.get(
+        `https://work-asana-backend.vercel.app/api/tasks/${taskId}`
+      );
+      console.log("fetchTaskById response.data", response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return "Error in getting task by ID ";
+    }
+  }
+);
+
 export const taskSlice = createSlice({
   name: "tasks",
   initialState: {
@@ -85,6 +102,7 @@ export const taskSlice = createSlice({
       state.status = "loading";
     });
     builder.addCase(createNewTask.fulfilled, (state, action) => {
+      console.log("createNewTask action.payload:", action.payload);
       if (action.payload) {
         state.status = "success";
         console.log("action.payload of task view: ", action.payload);
@@ -109,6 +127,19 @@ export const taskSlice = createSlice({
       console.log("action.payload of deleteTask: ", action.payload.deletedTask);
     });
     builder.addCase(deleteTask.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
+    });
+    //**********fetch task By Id
+    builder.addCase(fetchTaskById.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(fetchTaskById.fulfilled, (state, action) => {
+      state.status = "success";
+      console.log("fetchTaskById action.payload", action.payload);
+      state.tasks = action.payload;
+    });
+    builder.addCase(fetchTaskById.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;
     });
