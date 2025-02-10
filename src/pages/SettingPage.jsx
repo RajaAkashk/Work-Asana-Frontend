@@ -30,8 +30,6 @@ function SettingPage() {
   } = useSelector((state) => state.tasks);
 
   useEffect(() => {
-    dispatch(fetchTeams());
-    dispatch(fetchProjects());
     dispatch(
       fetchTasks({
         taskStatus: "",
@@ -39,6 +37,16 @@ function SettingPage() {
         dateSort: "",
       })
     );
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchTeams());
+    console.log("dispatch(fetchTeams()) :-", teams);
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchProjects());
+    console.log("dispatch(fetchProjects()) :-", projects);
   }, [dispatch]);
 
   const deleteTaskHandler = (taskId) => {
@@ -84,7 +92,7 @@ function SettingPage() {
                             <span className="col-md-5">
                               <Link
                                 to={{
-                                  pathname: `/edit-team/${team._id}`,
+                                  pathname: `/edit/team/${team._id}`,
                                 }}
                                 className="btn me-2 editAndDeleteBtn"
                               >
@@ -117,28 +125,34 @@ function SettingPage() {
                     <p>There are no projects.</p>
                   ) : (
                     <div className="row d-flex flex-wrap">
-                      {projects?.map((project) => (
-                        <div key={project._id} className="col-md-3">
-                          <div className="mt-2 p-2 rounded border d-flex justify-content-between">
-                            <span className="col-md-7 fw-medium fs-5">
-                              {project.name}
-                            </span>
-                            <span className="col-md-5">
-                              <button className="btn me-2 editAndDeleteBtn">
-                                <i class="bi bi-pencil-square"></i>
-                              </button>
-                              <button
-                                onClick={() =>
-                                  deleteProjectHandler(project._id)
-                                }
-                                className="btn editAndDeleteBtn"
-                              >
-                                <i class="bi bi-trash"></i>
-                              </button>
-                            </span>
+                      {projects.length > 0 &&
+                        projects?.map((project) => (
+                          <div key={project._id} className="col-md-3">
+                            <div className="mt-2 p-2 rounded border d-flex justify-content-between">
+                              <span className="col-md-7 fw-medium fs-5">
+                                {project.name}
+                              </span>
+                              <span className="col-md-5">
+                                <Link
+                                  to={{
+                                    pathname: `/edit/project/${project._id}`,
+                                  }}
+                                  className="btn me-2 editAndDeleteBtn"
+                                >
+                                  <i class="bi bi-pencil-square"></i>
+                                </Link>
+                                <button
+                                  onClick={() =>
+                                    deleteProjectHandler(project._id)
+                                  }
+                                  className="btn editAndDeleteBtn"
+                                >
+                                  <i class="bi bi-trash"></i>
+                                </button>
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   )}
                 </div>
@@ -163,9 +177,12 @@ function SettingPage() {
                               {task.name}
                             </span>
                             <span className="col-md-5">
-                              <button className="btn me-2 editAndDeleteBtn">
+                              <Link
+                                to={`/edit/task/${task._id}`}
+                                className="btn me-2 editAndDeleteBtn"
+                              >
                                 <i class="bi bi-pencil-square"></i>
-                              </button>
+                              </Link>
                               <button
                                 className="btn editAndDeleteBtn"
                                 onClick={() => deleteTaskHandler(task._id)}

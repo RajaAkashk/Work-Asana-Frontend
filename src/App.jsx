@@ -11,6 +11,8 @@ import ReportPage from "./pages/ReportPage";
 import ProjectPage from "./pages/ProjectPage";
 import TeamDetailsPage from "./pages/TeamDetailsPage";
 import EditTeamPage from "./pages/EditTeamPage";
+import EditProjectPage from "./pages/EditProjectPage";
+import EditTaskPage from "./pages/EditTaskPage";
 
 function App() {
   return (
@@ -29,6 +31,9 @@ function App() {
           <Route path="/team" element={<TeamsPage />}>
             Teams Page
           </Route>
+          <Route path="/team/:teamId" element={<TeamDetailsPage />}>
+            Team Details Page
+          </Route>
           <Route path="/setting" element={<SettingPage />}>
             Setting Page
           </Route>
@@ -38,11 +43,14 @@ function App() {
           <Route path="/project" element={<ProjectPage />}>
             Project Page
           </Route>
-          <Route path="/team/:teamId" element={<TeamDetailsPage />}>
-            Team Details Page
+          <Route path="/edit/project/:projectId" element={<EditProjectPage />}>
+            Edit Project Page
           </Route>
-          <Route path="/edit-team/:teamId" element={<EditTeamPage />}>
-            Team Details Page
+          <Route path="/edit/team/:teamId" element={<EditTeamPage />}>
+            Edit Team Page
+          </Route>
+          <Route path="/edit/task/:taskId" element={<EditTaskPage />}>
+            Edit Task Page
           </Route>
         </Routes>
       </div>

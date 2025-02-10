@@ -57,6 +57,42 @@ export const deleteProject = createAsyncThunk(
   }
 );
 
+export const updateProject = createAsyncThunk(
+  "put/updateTeam",
+  async ({ projectId, updatedProject }) => {
+    try {
+      const response = await axios.put(
+        `https://work-asana-backend.vercel.app/api/projects/${projectId}`,
+        updatedProject
+      );
+      if (!response) {
+        return "Failed to update project";
+      }
+      return response.data;
+    } catch (error) {
+      console.log("Error occured while updating project", error);
+      return "Error in updating project";
+    }
+  }
+);
+
+// Fetch project by ID
+export const fetchProjectById = createAsyncThunk(
+  "get/fetchProjectById",
+  async (projectId) => {
+    try {
+      const response = await axios.get(
+        `https://work-asana-backend.vercel.app/api/projects/${projectId}`
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return "Error in getting project by ID ";
+    }
+  }
+);
+
 export const projectSlice = createSlice({
   name: "projects",
   initialState: {
@@ -72,6 +108,7 @@ export const projectSlice = createSlice({
     builder.addCase(fetchProjects.fulfilled, (state, action) => {
       state.status = "success";
       state.projects = action.payload;
+      console.log("fetchProjects action.payload", action.payload);
     });
     builder.addCase(fetchProjects.rejected, (state, action) => {
       state.status = "error";
@@ -101,6 +138,41 @@ export const projectSlice = createSlice({
       );
     });
     builder.addCase(deleteProject.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
+    });
+    //**********fetch project By Id
+    builder.addCase(fetchProjectById.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(fetchProjectById.fulfilled, (state, action) => {
+      state.status = "success";
+      console.log("fetchProjectById action.payload", action.payload);
+      state.projects = action.payload;
+    });
+    builder.addCase(fetchProjectById.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
+    });
+    //********** */ Updatig a project
+    builder.addCase(updateProject.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(updateProject.fulfilled, (state, action) => {
+      state.status = "success";
+
+      // Check if state.projects is an array
+      if (Array.isArray(state.projects)) {
+        const index = state.projects.findIndex(
+          (project) => project._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.projects[index] = action.payload;
+        }
+      }
+      console.log("updateProject action.payload", action.payload);
+    });
+    builder.addCase(updateProject.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;
     });
