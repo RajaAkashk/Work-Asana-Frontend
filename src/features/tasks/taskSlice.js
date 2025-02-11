@@ -76,6 +76,27 @@ export const fetchTaskById = createAsyncThunk(
   }
 );
 
+// update Task
+export const updateTask = createAsyncThunk(
+  "put/updateTask",
+  async ({ taskId, updatedTask }) => {
+    try {
+      const response = await axios.put(
+        `https://work-asana-backend.vercel.app/api/tasks/${taskId}`,
+        updatedTask
+      );
+      if (!response) {
+        return "Failed to update the task";
+      }
+      console.log("response", response.data);
+      return response.data;
+    } catch (error) {
+      console.log("error in update task", error);
+      return "error while updating the task";
+    }
+  }
+);
+
 export const taskSlice = createSlice({
   name: "tasks",
   initialState: {
@@ -140,6 +161,26 @@ export const taskSlice = createSlice({
       state.tasks = action.payload;
     });
     builder.addCase(fetchTaskById.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
+    });
+    //**********update task By Id
+    builder.addCase(updateTask.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(updateTask.fulfilled, (state, action) => {
+      state.status = "success";
+      if (Array.isArray(state.tasks)) {
+        const index = state.tasks.indexOf(
+          (task) => task._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.tasks[index] = action.payload;
+        }
+      }
+      console.log("updateTask action.payload", action.payload);
+    });
+    builder.addCase(updateTask.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;
     });

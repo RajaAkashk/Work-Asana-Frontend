@@ -36,8 +36,8 @@ function TaskView() {
   useEffect(() => {
     dispatch(fetchTasks({ taskStatus }));
     dispatch(fetchTeams());
-    // dispatch(fetchTags());
     dispatch(fetchUser());
+    // dispatch(fetchTags());
     dispatch(
       fetchTasks({
         taskStatus: "",
@@ -60,7 +60,7 @@ function TaskView() {
     setSearchParams(newParams);
   };
 
-  const handleCreateProject = async (e) => {
+  const handleCreateTask = async (e) => {
     e.preventDefault();
     console.log("Create project button clicked!");
     const newTask = {
@@ -134,7 +134,7 @@ function TaskView() {
           <div className="form-container">
             <h3>Create New Task</h3>
 
-            <form onSubmit={handleCreateProject}>
+            <form onSubmit={handleCreateTask}>
               <div className="my-3">
                 <div className="mb-3">
                   <label className="form-label fw-medium">Select Project</label>

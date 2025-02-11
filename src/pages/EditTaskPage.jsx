@@ -2,7 +2,7 @@ import Sidebar from "../components/Sidebar";
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTaskById } from "../features/tasks/taskSlice";
+import { fetchTaskById, updateTask } from "../features/tasks/taskSlice";
 
 const EditTaskPage = () => {
   const { taskId } = useParams();
@@ -42,14 +42,27 @@ const EditTaskPage = () => {
 
   const handleUpdateTask = (e) => {
     e.preventDefault();
+    console.log("Updating Task with:", {
+      taskId,
+      updatedTask: {
+        name: taskName,
+        project: tasks.project._id,
+        team: tasks.team._id,
+        owners: tasks.owners[0]._id,
+        tags,
+        timeToComplete,
+        status,
+        priority,
+      },
+    });
     dispatch(
       updateTask({
         taskId,
         updatedTask: {
           name: taskName,
-          project,
-          team,
-          owners,
+          project: tasks.project._id,
+          team: tasks.team._id,
+          owners: tasks.owners[0]._id,
           tags,
           timeToComplete,
           status,
@@ -68,8 +81,8 @@ const EditTaskPage = () => {
           <div className="col-md-2">
             <Sidebar />
           </div>
-          <div className="col-md-10 px-4">
-            <div className="container mt-4">
+          <div className="col-md-10 px-4 pb-3">
+            <div className="container mt-4  mb-5">
               <Link
                 className="primaryColor text-decoration-none underline fs-5 fw-medium"
                 to="/setting"

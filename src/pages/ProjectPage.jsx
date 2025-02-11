@@ -1,13 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import { fetchTasks } from "../features/tasks/taskSlice";
+import { fetchTasks, createNewTask } from "../features/tasks/taskSlice";
+import { fetchTeams } from "../features/teams/teamSlice";
+import { fetchProjects } from "../features/projects/projectSlice";
+import { fetchUser } from "../features/users/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 import "../style/style.css";
 
 function ProjectPage() {
+  const [taskName, setTaskName] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [ownerName, setOwnerName] = useState("");
+  const [teamName, setTeamName] = useState("");
+  const [estimatedTime, setEstimatedTime] = useState("");
+  const [showForm, setShowForm] = useState(false);
+
   const dispatch = useDispatch();
   const { tasks, status, error } = useSelector((state) => state.tasks);
+  const { users } = useSelector((state) => state.users);
+  const { projects } = useSelector((state) => state.projects);
+  const { teams } = useSelector((state) => state.teams);
 
   const [searchParams, setSearchParams] = useSearchParams(); // URL Params Hook
 
@@ -17,7 +30,40 @@ function ProjectPage() {
 
   useEffect(() => {
     dispatch(fetchTasks({ taskStatus, prioritySort, dateSort }));
+    dispatch(fetchTeams());
+    dispatch(fetchProjects());
+    dispatch(fetchUser());
   }, [taskStatus, prioritySort, dateSort, dispatch]);
+
+  const handleCreateTask = async (e) => {
+    e.preventDefault();
+    console.log("Create project button clicked!");
+    const newTask = {
+      name: taskName,
+      project: projectName,
+      team: teamName,
+      tags: ["development"],
+      owners: [ownerName],
+      timeToComplete: estimatedTime,
+      status: "To Do",
+      priority: "Low",
+    };
+    console.log("New task Data:", newTask);
+    console.log("Owners before sending:", newTask.owners);
+    console.log("Is owners an array?", Array.isArray(newTask.owners));
+    console.log("Is owners[0] an array?", Array.isArray(newTask.owners[0]));
+
+    await dispatch(createNewTask(newTask));
+    // reset the form
+    setEstimatedTime("");
+    setTeamName("");
+    setTaskName("");
+    setOwnerName("");
+    setProjectName("");
+    setShowForm(false);
+    // setTag([]);
+    // setDueDate("");
+  };
 
   const updateFilter = (key, value) => {
     const newParams = new URLSearchParams(searchParams);
@@ -59,7 +105,7 @@ function ProjectPage() {
             </div>
             <div className="col-md-10">
               <div className="container py-4">
-                <h2>ProjectPage</h2>
+                {/* <h2>ProjectPage</h2> */}
 
                 <div className="p-4">
                   <div className="mb-2 d-flex flex-wrap justify-content-between">
@@ -119,11 +165,141 @@ function ProjectPage() {
                         <option value="To Do">To Do</option>
                         <option value="Blocked">Blocked</option>
                       </select>
-                      <button className="col-md-6 btn btn-primary ms-3 d-flex">
+                      <button
+                        onClick={() => setShowForm(true)}
+                        className="col-md-6 btn btn-primary ms-3 d-flex"
+                      >
                         <i class="bi bi-plus-lg me-2"></i> <span>New Task</span>
                       </button>
                     </div>
                   </div>
+
+                  {showForm && (
+                    <div className="overlay">
+                      <div className="form-container">
+                        <h3>Create New Task</h3>
+
+                        <form onSubmit={handleCreateTask}>
+                          <div className="my-3">
+                            <div className="mb-3">
+                              <label className="form-label fw-medium">
+                                Select Project
+                              </label>
+                              <select
+                                className="form-select"
+                                onChange={(e) => setProjectName(e.target.value)}
+                              >
+                                <option value="">select</option>
+                                {projects.length === 0
+                                  ? "Loading..."
+                                  : projects.map((project) => (
+                                      <option
+                                        key={project._id}
+                                        value={project._id}
+                                      >
+                                        {project.name}
+                                      </option>
+                                    ))}
+                              </select>
+                            </div>
+                            <div className="row flex-wrap">
+                              <div className="mb-3 col-md-6">
+                                <label className="form-label fw-medium">
+                                  Select Owner
+                                </label>
+                                <select
+                                  className="form-select"
+                                  onChange={(e) => setOwnerName(e.target.value)}
+                                >
+                                  <option value="">select</option>
+                                  {users.length === 0
+                                    ? "Loading..."
+                                    : users.map((user) => (
+                                        <option key={user._id} value={user._id}>
+                                          {user.name}
+                                        </option>
+                                      ))}
+                                </select>
+                              </div>
+                              <div className="mb-3 col-md-6">
+                                <label className="form-label fw-medium">
+                                  Task Name
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control mb-2"
+                                  // value={taskName}
+                                  onChange={(e) => setTaskName(e.target.value)} // Bind to the new member input
+                                  placeholder="Enter Task Name"
+                                />
+                              </div>
+                              <div className="mb-3 col-md-6">
+                                <label className="form-label fw-medium">
+                                  Select Team
+                                </label>
+                                <select
+                                  className="form-select"
+                                  onChange={(e) => setTeamName(e.target.value)}
+                                >
+                                  <option value="">select</option>
+                                  {teams.length === 0
+                                    ? "Loading..."
+                                    : teams.map((team) => (
+                                        <option key={team._id} value={team._id}>
+                                          {team.name}
+                                        </option>
+                                      ))}
+                                </select>
+                              </div>
+
+                              <div className="col-md-6">
+                                <label className="form-label fw-medium">
+                                  Estimated Time
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control mb-2"
+                                  value={estimatedTime}
+                                  onChange={(e) =>
+                                    setEstimatedTime(Number(e.target.value))
+                                  }
+                                  placeholder="Enter Time in Days"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <button
+                            type="submit"
+                            className="btn  fw-medium  w-100 mb-2"
+                            style={{
+                              background: "rgba(137, 19, 251, 0.07)",
+                              color: "#6818F1",
+                            }}
+                          >
+                            Create Task
+                          </button>
+
+                          <button
+                            className="btn text-secondary bg-secondary-subtle fw-medium w-100 mb-2"
+                            type="button"
+                            onClick={() => {
+                              setShowForm(false);
+                              setEstimatedTime("");
+                              setDueDate("");
+                              setTeamName("");
+                              setTaskName("");
+                              setOwnerName("");
+                              setTag("");
+                              setProjectName("");
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Task List */}
                   <table className="table table-bordered">
