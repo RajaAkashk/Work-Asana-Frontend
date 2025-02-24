@@ -83,7 +83,7 @@ export const updateTask = createAsyncThunk(
     try {
       const response = await axios.put(
         `https://work-asana-backend.vercel.app/api/tasks/${taskId}`,
-        updatedTask
+        updatedTask 
       );
       if (!response) {
         return "Failed to update the task";
@@ -95,7 +95,7 @@ export const updateTask = createAsyncThunk(
       return "error while updating the task";
     }
   }
-);
+); 
 
 export const taskSlice = createSlice({
   name: "tasks",
