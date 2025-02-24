@@ -17,16 +17,14 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const CompletedTasksChart = () => {
   const dispatch = useDispatch();
-  const { tasks } = useSelector((state) => state.tasks);
-
-  console.log("tasks:", tasks);
+  const { tasks } = useSelector((state) => state.tasks || []);
 
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
 
   // Filter completed tasks in the last 7 days
-  const lastWeekTasks = tasks.filter(
+  const lastWeekTasks = tasks?.filter(
     (task) =>
       task.status === "Completed" &&
       moment(task.updatedAt).isAfter(moment().subtract(7, "days"))
