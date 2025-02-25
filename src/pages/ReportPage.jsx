@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "../components/Sidebar";
 import CompletedTasksChart from "./CompletedTasksChart";
 import PendingTasksChart from "./PendingTasksChart";
+import TeamTasksPieChart from "./TeamTasksPieChart";
 
 function ReportPage() {
   return (
@@ -14,24 +15,28 @@ function ReportPage() {
             </div>
             <div className="col-md-10">
               <div className="container py-4">
-                <h1 className="mb-4">Report Page</h1>
-                <div className="row">
+                <h2 className="mb-5 primaryColor">Report Page</h2>
+                <div className="row flex-wrap justify-content-between">
                   <div className="col-md-6">
-                    <div className="px-4">
+                    <div className="text-center">
                       <h4>Total Work Completed Last Week</h4>
                       <CompletedTasksChart />
                     </div>
                   </div>
+
                   <div className="col-md-6">
-                    <div className="px-4">
-                      <h4>Tasks Closed by Each Team</h4>
-                      <CompletedTasksChart /> 
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="px-4">
+                    <div className="text-center">
                       <h4>Pending Work Across Projects</h4>
                       <PendingTasksChart />
+                    </div>
+                  </div>
+
+                  <div className="row justify-content-center my-5">
+                    <div className="col-md-4">
+                      <div className="text-center">
+                        <h4>Tasks Closed by Each Team</h4>
+                        <TeamTasksPieChart />
+                      </div>
                     </div>
                   </div>
                 </div>

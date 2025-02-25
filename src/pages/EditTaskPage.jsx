@@ -3,11 +3,19 @@ import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTaskById, updateTask } from "../features/tasks/taskSlice";
+import { fetchTeams } from "../features/teams/teamSlice";
 
 const EditTaskPage = () => {
   const { taskId } = useParams();
   const dispatch = useDispatch();
   const { tasks, loading, error } = useSelector((state) => state.tasks);
+  const {
+    teams,
+    loading: teamLoading,
+    error: teamError,
+  } = useSelector((state) => state.teams);
+  console.log("task Edit page teams:-", teams);
+
   console.log("taskId", taskId);
 
   const [message, setMessage] = useState(false);
@@ -131,12 +139,27 @@ const EditTaskPage = () => {
                     <label className="form-label" htmlFor="team">
                       Team:
                     </label>
-                    <input
+                    {/* <input
                       id="team"
                       value={team}
                       onChange={(e) => setTeam(e.target.value)}
                       className="form-control"
-                    />
+                    /> */}
+                    <select
+                      className="form-select"
+                      onChange={(e) => setTeam(e.target.value)}
+                      value={team}
+                    >
+                      {" "}
+                      <option value={team}>{team}</option>
+                      {Array.isArray(teams) && teams.length > 0 ? (
+                        teams.map((team) => (
+                          <option value={team._id}>{team.name}</option>
+                        ))
+                      ) : (
+                        <p>Loading...</p>
+                      )}
+                    </select>
                   </div>
 
                   {/* Owners */}
@@ -188,7 +211,7 @@ const EditTaskPage = () => {
                       id="status"
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
-                      className="form-control"
+                      className="form-select"
                     >
                       <option value="To Do">To Do</option>
                       <option value="In Progress">In Progress</option>
@@ -206,7 +229,7 @@ const EditTaskPage = () => {
                       id="priority"
                       value={priority}
                       onChange={(e) => setPriority(e.target.value)}
-                      className="form-control"
+                      className="form-select"
                     >
                       <option value="Low">Low</option>
                       <option value="Medium">Medium</option>

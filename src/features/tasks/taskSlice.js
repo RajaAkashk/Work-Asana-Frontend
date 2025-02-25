@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
-  async ({ taskStatus, prioritySort, dateSort }) => {
+  async ({ taskStatus, prioritySort, dateSort } = {}) => {
     try {
       const queryParams = new URLSearchParams();
 
@@ -17,6 +17,7 @@ export const fetchTasks = createAsyncThunk(
       console.log("Fetched tasks:", response.data);
       return response.data;
     } catch (error) {
+      console.error(error);
       throw error.response?.data?.message || "Failed to fetch tasks";
     }
   }
@@ -83,7 +84,7 @@ export const updateTask = createAsyncThunk(
     try {
       const response = await axios.put(
         `https://work-asana-backend.vercel.app/api/tasks/${taskId}`,
-        updatedTask 
+        updatedTask
       );
       if (!response) {
         return "Failed to update the task";
@@ -95,7 +96,7 @@ export const updateTask = createAsyncThunk(
       return "error while updating the task";
     }
   }
-); 
+);
 
 export const taskSlice = createSlice({
   name: "tasks",
@@ -116,6 +117,7 @@ export const taskSlice = createSlice({
     });
     builder.addCase(fetchTasks.rejected, (state, action) => {
       state.status = "error";
+      console.log("fetchTasks .error.message :- ", action.error.message);
       state.error = action.error.message;
     });
     // create New Task
