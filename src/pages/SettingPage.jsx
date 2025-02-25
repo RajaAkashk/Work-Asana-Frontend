@@ -37,16 +37,17 @@ function SettingPage() {
         dateSort: "",
       })
     );
+    console.log("dispatch(fetchTasks()) :-", tasks);
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchTeams());
-    console.log("dispatch(fetchTeams()) :-", teams);
+    // console.log("dispatch(fetchTeams()) :-", teams);
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchProjects());
-    console.log("dispatch(fetchProjects()) :-", projects);
+    // console.log("dispatch(fetchProjects()) :-", projects);
   }, [dispatch]);
 
   const deleteTaskHandler = (taskId) => {
@@ -83,31 +84,32 @@ function SettingPage() {
                     <p>There are no teams</p>
                   ) : (
                     <div className="row d-flex flex-wrap">
-                      {teams?.map((team) => (
-                        <div key={team._id} className="col-md-3">
-                          <div className="mt-2 p-2 rounded border d-flex justify-content-between">
-                            <span className="col-md-7 fw-medium fs-5">
-                              {team.name}
-                            </span>
-                            <span className="col-md-5">
-                              <Link
-                                to={{
-                                  pathname: `/edit/team/${team._id}`,
-                                }}
-                                className="btn me-2 editAndDeleteBtn"
-                              >
-                                <i class="bi bi-pencil-square"></i>
-                              </Link>
-                              <button
-                                onClick={() => deleteTeamHandler(team._id)}
-                                className="btn editAndDeleteBtn"
-                              >
-                                <i class="bi bi-trash"></i>
-                              </button>
-                            </span>
+                      {Array.isArray(teams) &&
+                        teams?.map((team) => (
+                          <div key={team._id} className="col-md-3">
+                            <div className="mt-2 p-2 rounded border d-flex justify-content-between">
+                              <span className="col-md-7 fw-medium fs-5">
+                                {team.name}
+                              </span>
+                              <span className="col-md-5">
+                                <Link
+                                  to={{
+                                    pathname: `/edit/team/${team._id}`,
+                                  }}
+                                  className="btn me-2 editAndDeleteBtn"
+                                >
+                                  <i class="bi bi-pencil-square"></i>
+                                </Link>
+                                <button
+                                  onClick={() => deleteTeamHandler(team._id)}
+                                  className="btn editAndDeleteBtn"
+                                >
+                                  <i class="bi bi-trash"></i>
+                                </button>
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   )}
                 </div>
@@ -170,29 +172,30 @@ function SettingPage() {
                     <p>There are no tasks</p>
                   ) : (
                     <div className="row d-flex flex-wrap">
-                      {tasks?.map((task) => (
-                        <div key={task._id} className="col-md-3">
-                          <div className="mt-2 p-2 rounded border d-flex justify-content-between">
-                            <span className="col-md-7 fw-medium fs-5">
-                              {task.name}
-                            </span>
-                            <span className="col-md-5">
-                              <Link
-                                to={`/edit/task/${task._id}`}
-                                className="btn me-2 editAndDeleteBtn"
-                              >
-                                <i class="bi bi-pencil-square"></i>
-                              </Link>
-                              <button
-                                className="btn editAndDeleteBtn"
-                                onClick={() => deleteTaskHandler(task._id)}
-                              >
-                                <i class="bi bi-trash"></i>
-                              </button>
-                            </span>
+                      {Array.isArray(tasks) &&
+                        tasks?.map((task) => (
+                          <div key={task._id} className="col-md-3">
+                            <div className="mt-2 p-2 rounded border d-flex justify-content-between">
+                              <span className="col-md-7 fw-medium fs-5">
+                                {task.name}
+                              </span>
+                              <span className="col-md-5">
+                                <Link
+                                  to={`/edit/task/${task._id}`}
+                                  className="btn me-2 editAndDeleteBtn"
+                                >
+                                  <i class="bi bi-pencil-square"></i>
+                                </Link>
+                                <button
+                                  className="btn editAndDeleteBtn"
+                                  onClick={() => deleteTaskHandler(task._id)}
+                                >
+                                  <i class="bi bi-trash"></i>
+                                </button>
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   )}
                 </div>

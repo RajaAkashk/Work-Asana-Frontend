@@ -108,7 +108,7 @@ export const projectSlice = createSlice({
     builder.addCase(fetchProjects.fulfilled, (state, action) => {
       state.status = "success";
       state.projects = action.payload;
-      console.log("fetchProjects action.payload", action.payload);
+      // console.log("fetchProjects action.payload", action.payload);
     });
     builder.addCase(fetchProjects.rejected, (state, action) => {
       state.status = "error";

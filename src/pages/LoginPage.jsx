@@ -11,7 +11,7 @@ function LoginPage() {
 
   useEffect(() => {
     // if token is already in local storage
-    if (localStorage.getItem("Login token")) {
+    if (sessionStorage.getItem("Login token")) {
       navigate("/dashboard");
     }
   }, [navigate]);
@@ -30,7 +30,7 @@ function LoginPage() {
         user
       );
       if (response.data.token) {
-        localStorage.setItem("Login token", response.data.token);
+        sessionStorage.setItem("Login token", response.data.token);
         setMessage("Login successful");
         setTimeout(() => setMessage(""), 1500);
         setPassword("");

@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
   const [email, setEmail] = useState("");
@@ -9,7 +10,9 @@ function SignupPage() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState(false);
 
-  const handleLogin = async (e) => {
+  const navigate = useNavigate();
+
+  const handleSingup = async (e) => {
     e.preventDefault();
     console.log("Email:", email, "Password:", password);
 
@@ -23,12 +26,17 @@ function SignupPage() {
         "https://work-asana-backend.vercel.app/api/users/register",
         user
       );
-      if (response.data.token) {
-        localStorage.setItem("Login token", response.data.token);
+      console.log("response.data:- ", response.data);
+
+      if (response.data) {
         setMessage("Register successful");
-        setTimeout(() => setMessage(""), 1500);
+        setName("");
         setPassword("");
         setEmail("");
+        setTimeout(() => {
+          setMessage("");
+          navigate("/");
+        }, 1500);
       } else {
         setMessage("Something went wrong please Register again.");
       }
@@ -58,7 +66,7 @@ function SignupPage() {
                   {message}
                 </div>
               )}
-              <form onSubmit={handleLogin}>
+              <form onSubmit={handleSingup}>
                 <div className="mb-3">
                   <label htmlFor="name" className="form-label">
                     Name

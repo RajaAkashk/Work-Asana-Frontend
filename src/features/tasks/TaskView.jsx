@@ -20,14 +20,12 @@ function TaskView() {
   const dispatch = useDispatch();
 
   const { tasks, status, error } = useSelector((state) => state.tasks);
+
   console.log("Tasks ", tasks);
-  // const { tags } = useSelector((state) => state.tags);
+
   const { users } = useSelector((state) => state.users);
   const { projects } = useSelector((state) => state.projects);
   const { teams } = useSelector((state) => state.teams);
-
-  // console.log("Teams from Task View", teams);
-  // console.log("projects from Task View", projects);
 
   const [searchParams, setSearchParams] = useSearchParams(); // URL Params Hook
 
@@ -37,14 +35,6 @@ function TaskView() {
     dispatch(fetchTasks({ taskStatus }));
     dispatch(fetchTeams());
     dispatch(fetchUser());
-    // dispatch(fetchTags());
-    dispatch(
-      fetchTasks({
-        taskStatus: "",
-        prioritySort: "",
-        dateSort: "",
-      })
-    );
   }, [taskStatus, dispatch]);
 
   // console.log("fetch Tags from task view: ", tags);
@@ -117,7 +107,7 @@ function TaskView() {
           >
             <option value="">Filter</option>
             <option value="In Progress">In Progress</option>
-            <option value="Complete">Complete</option>
+            <option value="Completed">Completed</option>
             <option value="To Do">To Do</option>
             <option value="Blocked">Blocked</option>
           </select>
@@ -277,13 +267,15 @@ function TaskView() {
       )}
 
       <div className="row g-4 pt-4">
-        {error && <p>Error in fetching tasks</p>}
-        {status === "loading" ? (
+        {error ? (
+          <p>Error in fetching tasks</p>
+        ) : status === "loading" ? (
           <p>Loading...</p>
         ) : tasks.length === 0 ? (
-          <p className="fs-5 fw-medium">There are no Tasks</p> // Display this message when there are no tasks
+          <p className="fs-5 fw-medium">There are no Tasks</p>
         ) : (
-          tasks.map((task) => (
+          Array.isArray(tasks) &&
+          tasks?.map((task) => (
             <div className="col-md-4" key={task?._id}>
               <div className="card h-100">
                 <div className="card-body">
@@ -309,14 +301,13 @@ function TaskView() {
                   <div className="mt-3">
                     {Array.isArray(task?.owners) && task?.owners.length > 0 ? (
                       task?.owners.map((member) => {
-                        // Ensure `member.name` is a string before calling `.split()`
                         const initials =
                           typeof member.name === "string"
                             ? member.name
                                 .split(" ")
                                 .map((name) => name[0].toUpperCase())
                                 .join("")
-                            : ""; // Default to an empty string if `member.name` isn't valid
+                            : "";
 
                         return (
                           <div
