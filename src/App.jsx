@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./pages/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -22,36 +23,59 @@ function App() {
           <Route path="/" element={<LoginPage />}>
             Login
           </Route>
-          <Route path="/dashboard" element={<DashboardPage />}>
-            Dashboard
-          </Route>
           <Route path="/signUp" element={<SignupPage />}>
             Sign Up
           </Route>
-          <Route path="/team" element={<TeamsPage />}>
+
+          {/* Protected Routes  */}
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoute element={<DashboardPage />} />}
+          >
+            Dashboard
+          </Route>
+          <Route
+            path="/team"
+            element={<ProtectedRoute element={<TeamsPage />} />}
+          >
             Teams Page
           </Route>
-          <Route path="/team/:teamId" element={<TeamDetailsPage />}>
+          <Route
+            path="/team/:teamId"
+            element={<ProtectedRoute element={<TeamDetailsPage />} />}
+          >
             Team Details Page
           </Route>
-          <Route path="/setting" element={<SettingPage />}>
+          <Route
+            path="/setting"
+            element={<ProtectedRoute element={<SettingPage />} />}
+          >
             Setting Page
           </Route>
-          <Route path="/report" element={<ReportPage />}>
+          <Route
+            path="/report"
+            element={<ProtectedRoute element={<ReportPage />} />}
+          >
             Report Page
           </Route>
-          <Route path="/project" element={<ProjectPage />}>
+          <Route
+            path="/project"
+            element={<ProtectedRoute element={<ProjectPage />} />}
+          >
             Project Page
           </Route>
-          <Route path="/edit/project/:projectId" element={<EditProjectPage />}>
-            Edit Project Page
-          </Route>
-          <Route path="/edit/team/:teamId" element={<EditTeamPage />}>
-            Edit Team Page
-          </Route>
-          <Route path="/edit/task/:taskId" element={<EditTaskPage />}>
-            Edit Task Page
-          </Route>
+          <Route
+            path="/edit/project/:projectId"
+            element={<ProtectedRoute element={<EditProjectPage />} />}
+          />
+          <Route
+            path="/edit/team/:teamId"
+            element={<ProtectedRoute element={<EditTeamPage />} />}
+          />
+          <Route
+            path="/edit/task/:taskId"
+            element={<ProtectedRoute element={<EditTaskPage />} />}
+          />
         </Routes>
       </div>
     </Router>
