@@ -3,13 +3,21 @@ import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import ProjectView from "../features/projects/ProjectView";
 import TaskView from "../features/tasks/TaskView.jsx";
+import { useNavigate } from "react-router-dom";
 
 function DashboardPage() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
     console.log("Searching for:", searchQuery);
   };
+
+  const handleLogOut = () => {
+    localStorage.removeItem("Login token");
+    navigate("/");
+  };
+
   return (
     <>
       <main>
@@ -49,6 +57,11 @@ function DashboardPage() {
                     {/* Tasks  */}
                     <TaskView />
                   </div>
+                </div>
+                <div className="float-end mt-4">
+                  <button className="btn btn-primary" onClick={handleLogOut}>
+                    Log Out
+                  </button>
                 </div>
               </div>
             </div>
