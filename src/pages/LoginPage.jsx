@@ -9,14 +9,14 @@ function LoginPage() {
   const [message, setMessage] = useState(false);
   const navigate = useNavigate();
 
-    // useEffect(() => {
-    //   // if token is already in local storage
-    //   const token = sessionStorage.getItem("Login token");
-    //   console.log("token:-", token);
-    //   if (token) {
-    //     navigate("/dashboard");
-    //   }
-    // }, [navigate]);
+  // useEffect(() => {
+  //   // if token is already in local storage
+  //   const token = sessionStorage.getItem("Login token");
+  //   console.log("token:-", token);
+  //   if (token) {
+  //     navigate("/dashboard");
+  //   }
+  // }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ function LoginPage() {
         user
       );
       if (response.data.token) {
-        sessionStorage.setItem("Login token", response.data.token);
+        localStorage.setItem("Login token", response.data.token);
         setMessage("Login successful");
 
         setTimeout(() => {
