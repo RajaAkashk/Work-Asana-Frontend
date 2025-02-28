@@ -23,14 +23,14 @@ function DashboardPage() {
     dispatch(fetchTasks());
   }, [dispatch]);
 
-  console.log("projects & tasks", projects, tasks);
+  // console.log("projects & tasks", projects, tasks);
 
   const handleSearch = (e) => {
-    const searchedValue = e.target.value.toLowerCase(); 
+    const searchedValue = e.target.value.toLowerCase();
     setSearchQuery(e.target.value);
 
     if (!searchedValue) {
-      setSearchResult([]); 
+      setSearchResult([]);
       return;
     }
 
@@ -47,9 +47,25 @@ function DashboardPage() {
     console.log("Searching for:", e.target.value);
   };
   console.log(searchResult);
+
   const handleLogOut = () => {
     localStorage.removeItem("Login token");
     navigate("/");
+  };
+
+  const getBadgeClass = (status) => {
+    switch (status) {
+      case "To Do":
+        return "text-bg-secondary";
+      case "In Progress":
+        return "text-bg-primary";
+      case "Completed":
+        return "text-bg-success";
+      case "Blocked":
+        return "text-bg-danger";
+      default:
+        return "text-bg-secondary";
+    }
   };
 
   return (
@@ -77,14 +93,14 @@ function DashboardPage() {
                 <div className="row">
                   {searchResult && searchResult.length > 0 ? (
                     searchResult.map((data) => (
-                      <div className="col-md-4" key={data._id}>
-                        <div className="mt-4 card h-100">
+                      <div className="col-md-4 mt-4" key={data._id}>
+                        <div className="card h-100">
                           <div className="card-body">
-                            {/* <span
+                            <span
                               className={`badge ${getBadgeClass(data.status)}`}
                             >
                               {data.status}
-                            </span> */}
+                            </span>
                             <h5 className="card-title mt-3">{data.name}</h5>
                             <p className="card-text">{data.description}</p>
                             <small className="card-text">

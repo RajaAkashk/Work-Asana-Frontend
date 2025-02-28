@@ -6,13 +6,13 @@ import { fetchTeams } from "../teams/teamSlice";
 import { useSearchParams } from "react-router-dom";
 import { fetchTags } from "../tags/tagSlice";
 import { fetchUser } from "../users/userSlice";
-import Select from "react-select/base";
+import Select from "react-select";
 
 function TaskView() {
   const [taskName, setTaskName] = useState("");
   const [projectName, setProjectName] = useState("");
-  // const [ownerName, setOwnerName] = useState("");
   const [ownerNames, setOwnerNames] = useState([]);
+  const [ownersId, setOwnersId] = useState([]);
   const [teamName, setTeamName] = useState("");
   const [estimatedTime, setEstimatedTime] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -55,7 +55,12 @@ function TaskView() {
   // for multiple select
   const handleMultiSelectChange = (selectedOwner) => {
     setOwnerNames(selectedOwner);
+    setOwnersId(selectedOwner.map((data) => data.value));
     console.log("selectedOwner", selectedOwner);
+    console.log(
+      "setOwnersId",
+      selectedOwner.map((data) => data.value)
+    );
   };
   const userOptions = users.map((user) => ({
     value: user._id,
@@ -71,7 +76,7 @@ function TaskView() {
       project: projectName,
       team: teamName,
       tags: ["development"],
-      owners: ownerNames,
+      owners: ownersId,
       timeToComplete: estimatedTime,
       status: "To Do",
       priority: "Low",
@@ -79,7 +84,7 @@ function TaskView() {
     console.log("New task Data:", newTask);
     console.log("Owners before sending:", newTask.owners);
     console.log("Is owners an array?", Array.isArray(newTask.owners));
-    console.log("Is owners[0] an array?", Array.isArray(newTask.owners[0]));
+    console.log("Is owners an array?", Array.isArray(newTask.owners));
 
     await dispatch(createNewTask(newTask));
     // reset the form
@@ -158,25 +163,13 @@ function TaskView() {
                 <div className="row flex-wrap">
                   <div className="mb-3 col-md-6">
                     <label className="form-label fw-medium">Select Owner</label>
-                    {/* <select
-                      className="form-select"
-                      onChange={(e) => setOwnerName(e.target.value)}
-                    >
-                      <option value="">select</option>
-                      {users.length === 0
-                        ? "Loading..."
-                        : users.map((user) => (
-                            <option key={user._id} value={user._id}>
-                              {user.name}
-                            </option>
-                          ))}
-                    </select> */}
 
                     <Select
                       isMulti
                       value={ownerNames}
                       onChange={handleMultiSelectChange}
                       options={userOptions}
+                      onMenuOpen={() => console.log("Menu Opened")}
                     />
                   </div>
                   <div className="mb-3 col-md-6">
