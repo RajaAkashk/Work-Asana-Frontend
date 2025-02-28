@@ -75,7 +75,7 @@ function TaskView() {
       name: taskName,
       project: projectName,
       team: teamName,
-      tags: ["development"],
+      tags: ["task"],
       owners: ownersId,
       timeToComplete: estimatedTime,
       status: "To Do",
@@ -91,6 +91,7 @@ function TaskView() {
     setTeamName("");
     setTaskName("");
     setOwnerNames([]);
+    setOwnerId([]);
     setProjectName("");
     setShowForm(false);
     // setTag([]);
@@ -165,6 +166,7 @@ function TaskView() {
 
                     <Select
                       isMulti
+                      key={ownerNames.length}
                       value={ownerNames}
                       onChange={handleMultiSelectChange}
                       options={userOptions}
@@ -219,18 +221,6 @@ function TaskView() {
                     </select>
                   </div> */}
 
-                  {/* <div className="col-md-6">
-                    <label className="form-label fw-medium">
-                      Select Due Date
-                    </label>
-                    <input
-                      type="date"
-                      className="form-control mb-2"
-                      value={dueDate}
-                      onChange={(e) => setDueDate(e.target.value)}
-                      placeholder="Select Date"
-                    />
-                  </div> */}
                   <div className="col-md-6">
                     <label className="form-label fw-medium">
                       Estimated Time
@@ -262,11 +252,12 @@ function TaskView() {
                 type="button"
                 onClick={() => {
                   setShowForm(false);
+                  setOwnerNames([]);
+                  setOwnersId([]);
                   setEstimatedTime("");
                   setDueDate("");
                   setTeamName("");
                   setTaskName("");
-                  setOwnerNames("");
                   setTag("");
                   setProjectName("");
                 }}
