@@ -6,11 +6,13 @@ import { fetchTeams } from "../teams/teamSlice";
 import { useSearchParams } from "react-router-dom";
 import { fetchTags } from "../tags/tagSlice";
 import { fetchUser } from "../users/userSlice";
+import Select from "react-select/base";
 
 function TaskView() {
   const [taskName, setTaskName] = useState("");
   const [projectName, setProjectName] = useState("");
-  const [ownerName, setOwnerName] = useState("");
+  // const [ownerName, setOwnerName] = useState("");
+  const [ownerNames, setOwnerNames] = useState([]);
   const [teamName, setTeamName] = useState("");
   const [estimatedTime, setEstimatedTime] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -38,7 +40,7 @@ function TaskView() {
   }, [taskStatus, dispatch]);
 
   // console.log("fetch Tags from task view: ", tags);
-  // console.log("fetch User from task view: ", users);
+  console.log("fetch User from task view: ", users);
 
   const statusFilterHandler = (value) => {
     const newParams = new URLSearchParams(searchParams);
@@ -50,6 +52,17 @@ function TaskView() {
     setSearchParams(newParams);
   };
 
+  // for multiple select
+  const handleMultiSelectChange = (selectedOwner) => {
+    setOwnerNames(selectedOwner);
+    console.log("selectedOwner", selectedOwner);
+  };
+  const userOptions = users.map((user) => ({
+    value: user._id,
+    label: user.name,
+  }));
+  console.log("userOptions", userOptions);
+
   const handleCreateTask = async (e) => {
     e.preventDefault();
     console.log("Create project button clicked!");
@@ -58,7 +71,7 @@ function TaskView() {
       project: projectName,
       team: teamName,
       tags: ["development"],
-      owners: [ownerName],
+      owners: ownerNames,
       timeToComplete: estimatedTime,
       status: "To Do",
       priority: "Low",
@@ -73,7 +86,7 @@ function TaskView() {
     setEstimatedTime("");
     setTeamName("");
     setTaskName("");
-    setOwnerName("");
+    setOwnerNames([]);
     setProjectName("");
     setShowForm(false);
     // setTag([]);
@@ -145,7 +158,7 @@ function TaskView() {
                 <div className="row flex-wrap">
                   <div className="mb-3 col-md-6">
                     <label className="form-label fw-medium">Select Owner</label>
-                    <select
+                    {/* <select
                       className="form-select"
                       onChange={(e) => setOwnerName(e.target.value)}
                     >
@@ -157,7 +170,14 @@ function TaskView() {
                               {user.name}
                             </option>
                           ))}
-                    </select>
+                    </select> */}
+
+                    <Select
+                      isMulti
+                      value={ownerNames}
+                      onChange={handleMultiSelectChange}
+                      options={userOptions}
+                    />
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label fw-medium">Task Name</label>
@@ -254,7 +274,7 @@ function TaskView() {
                   setDueDate("");
                   setTeamName("");
                   setTaskName("");
-                  setOwnerName("");
+                  setOwnerNames("");
                   setTag("");
                   setProjectName("");
                 }}

@@ -1,18 +1,52 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import ProjectView from "../features/projects/ProjectView";
 import TaskView from "../features/tasks/TaskView.jsx";
 import { useNavigate } from "react-router-dom";
+import { fetchProjects } from "../features/projects/projectSlice.js";
+import { fetchTasks } from "../features/tasks/taskSlice.js";
+import { useSelector, useDispatch } from "react-redux";
 
 function DashboardPage() {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
 
-  const handleSearch = () => {
-    console.log("Searching for:", searchQuery);
+  const { projects } = useSelector((state) => state.projects);
+  const { tasks } = useSelector((state) => state.tasks);
+
+  useEffect(() => {
+    dispatch(fetchProjects());
+    dispatch(fetchTasks());
+  }, [dispatch]);
+
+  console.log("projects & tasks", projects, tasks);
+
+  const handleSearch = (e) => {
+    const searchedValue = e.target.value.toLowerCase(); 
+    setSearchQuery(e.target.value);
+
+    if (!searchedValue) {
+      setSearchResult([]); 
+      return;
+    }
+
+    const filteredProjectsResults = projects.filter((data) =>
+      data.name.toLowerCase().includes(searchedValue)
+    );
+
+    const filteredTasksResults = tasks.filter((data) =>
+      data.name.toLowerCase().includes(searchedValue)
+    );
+
+    setSearchResult([...filteredProjectsResults, ...filteredTasksResults]); // Replace previous results
+
+    console.log("Searching for:", e.target.value);
   };
-
+  console.log(searchResult);
   const handleLogOut = () => {
     localStorage.removeItem("Login token");
     navigate("/");
@@ -34,29 +68,53 @@ function DashboardPage() {
                     className="form-control"
                     placeholder="Search"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={handleSearch}
                   />
-                  <button
-                    className="btn btn-outline-secondary"
-                    type="button"
-                    onClick={handleSearch}
-                  >
+                  <button disabled className="btn btn-outline-secondary">
                     <i className="bi bi-search"></i>
                   </button>
                 </div>
+                <div className="row">
+                  {searchResult && searchResult.length > 0 ? (
+                    searchResult.map((data) => (
+                      <div className="col-md-4" key={data._id}>
+                        <div className="mt-4 card h-100">
+                          <div className="card-body">
+                            {/* <span
+                              className={`badge ${getBadgeClass(data.status)}`}
+                            >
+                              {data.status}
+                            </span> */}
+                            <h5 className="card-title mt-3">{data.name}</h5>
+                            <p className="card-text">{data.description}</p>
+                            <small className="card-text">
+                              {" "}
+                              <strong>Created At: </strong>
+                              {data.createdAt
+                                ? new Date(data.createdAt).toLocaleDateString()
+                                : "N/A"}
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <>
+                      <div className="pt-4">
+                        <div className="mt-4">
+                          {/* Projects  */}
+                          <ProjectView />
+                        </div>
+                      </div>
 
-                <div className="pt-4">
-                  <div className="mt-4">
-                    {/* Projects  */}
-                    <ProjectView />
-                  </div>
-                </div>
-
-                <div className="py-5">
-                  <div className="mt-4">
-                    {/* Tasks  */}
-                    <TaskView />
-                  </div>
+                      <div className="py-5">
+                        <div className="mt-4">
+                          {/* Tasks  */}
+                          <TaskView />
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
                 <div className="float-end mt-4">
                   <button className="btn btn-primary" onClick={handleLogOut}>
