@@ -1,8 +1,8 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
-import CompletedTasksChart from "./CompletedTasksChart";
-import PendingTasksChart from "./PendingTasksChart";
-import TeamTasksPieChart from "./TeamTasksPieChart";
+import CompletedTasksChart from "../components/CompletedTasksChart";
+import PendingTasksChart from "../components/PendingTasksChart";
+import TeamTasksPieChart from "../components/TeamTasksPieChart";
 
 function ReportPage() {
   return (

@@ -12,7 +12,6 @@ import {
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
-
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const CompletedTasksChart = () => {
@@ -25,11 +24,13 @@ const CompletedTasksChart = () => {
   const { tasks } = useSelector((state) => state.tasks || []);
 
   // Filter completed tasks in the last 7 days
-  const lastWeekTasks = tasks.filter(
-    (task) =>
-      task.status === "Completed" &&
-      moment(task.updatedAt).isAfter(moment().subtract(7, "days"))
-  );
+  const lastWeekTasks = Array.isArray(tasks)
+    ? tasks?.filter(
+        (task) =>
+          task.status === "Completed" &&
+          moment(task.updatedAt).isAfter(moment().subtract(7, "days"))
+      )
+    : [];
 
   const data = {
     labels: lastWeekTasks.map((task) => task.name),

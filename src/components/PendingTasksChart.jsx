@@ -23,9 +23,11 @@ const PendingTasksChart = () => {
 
   const { tasks } = useSelector((state) => state.tasks);
 
-  const pendingTasks = tasks.filter(
-    (task) => task.status === "To Do" || task.status === "Blocked"
-  );
+  const pendingTasks = Array.isArray(tasks)
+    ? tasks?.filter(
+        (task) => task.status === "To Do" || task.status === "Blocked"
+      )
+    : [];
 
   const projectTaskCount = pendingTasks.reduce((acc, task) => {
     const projectName = task.project.name;
