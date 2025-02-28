@@ -6,14 +6,16 @@ import { fetchProjects } from "../features/projects/projectSlice";
 import { fetchUser } from "../features/users/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
+import Select from "react-select";
 import "../style/style.css";
 
 function ProjectPage() {
   const [taskName, setTaskName] = useState("");
   const [projectName, setProjectName] = useState("");
-  const [ownerName, setOwnerName] = useState("");
   const [teamName, setTeamName] = useState("");
   const [estimatedTime, setEstimatedTime] = useState("");
+  const [ownerNames, setOwnerNames] = useState([]);
+  const [ownersId, setOwnersId] = useState([]);
   const [showForm, setShowForm] = useState(false);
 
   const dispatch = useDispatch();
@@ -35,6 +37,22 @@ function ProjectPage() {
     dispatch(fetchUser());
   }, [taskStatus, prioritySort, dateSort, dispatch]);
 
+  // for multiple select
+  const handleMultiSelectChange = (selectedOwner) => {
+    setOwnerNames(selectedOwner);
+    setOwnersId(selectedOwner.map((data) => data.value));
+    console.log("selectedOwner", selectedOwner);
+    console.log(
+      "setOwnersId",
+      selectedOwner.map((data) => data.value)
+    );
+  };
+  const userOptions = users.map((user) => ({
+    value: user._id,
+    label: user.name,
+  }));
+  console.log("userOptions", userOptions);
+
   const handleCreateTask = async (e) => {
     e.preventDefault();
     console.log("Create project button clicked!");
@@ -42,8 +60,8 @@ function ProjectPage() {
       name: taskName,
       project: projectName,
       team: teamName,
-      tags: ["development"],
-      owners: [ownerName],
+      tags: ["task"],
+      owners: ownersId,
       timeToComplete: estimatedTime,
       status: "To Do",
       priority: "Low",
@@ -51,14 +69,13 @@ function ProjectPage() {
     console.log("New task Data:", newTask);
     console.log("Owners before sending:", newTask.owners);
     console.log("Is owners an array?", Array.isArray(newTask.owners));
-    console.log("Is owners[0] an array?", Array.isArray(newTask.owners[0]));
 
     await dispatch(createNewTask(newTask));
     // reset the form
     setEstimatedTime("");
     setTeamName("");
     setTaskName("");
-    setOwnerName("");
+    setOwnerNames([]);
     setProjectName("");
     setShowForm(false);
     // setTag([]);
@@ -207,19 +224,14 @@ function ProjectPage() {
                                 <label className="form-label fw-medium">
                                   Select Owner
                                 </label>
-                                <select
-                                  className="form-select"
-                                  onChange={(e) => setOwnerName(e.target.value)}
-                                >
-                                  <option value="">select</option>
-                                  {users.length === 0
-                                    ? "Loading..."
-                                    : users.map((user) => (
-                                        <option key={user._id} value={user._id}>
-                                          {user.name}
-                                        </option>
-                                      ))}
-                                </select>
+
+                                <Select
+                                  isMulti
+                                  value={ownerNames}
+                                  onChange={handleMultiSelectChange}
+                                  options={userOptions}
+                                  onMenuOpen={() => console.log("Menu Opened")}
+                                />
                               </div>
                               <div className="mb-3 col-md-6">
                                 <label className="form-label fw-medium">
@@ -251,6 +263,27 @@ function ProjectPage() {
                                       ))}
                                 </select>
                               </div>
+                              {/* <div className="mb-3 col-md-6">
+                    <label className="form-label fw-medium">Select Tags</label>
+                    <select
+                      className="form-select"
+                      multiple
+                      onChange={(e) =>
+                        setTag(
+                          [...e.target.value].map((option) => option.value)
+                        )
+                      }
+                    >
+                      <option>Select</option>
+                      {tags.length === 0
+                        ? "Loading..."
+                        : tags.map((tag) => (
+                            <option key={tag._id} value={tag.name}>
+                              {tag.name}
+                            </option>
+                          ))}
+                    </select>
+                  </div> */}
 
                               <div className="col-md-6">
                                 <label className="form-label fw-medium">
@@ -285,11 +318,12 @@ function ProjectPage() {
                             type="button"
                             onClick={() => {
                               setShowForm(false);
+                              setOwnerNames([]);
+                              setOwnersId([]);
                               setEstimatedTime("");
                               setDueDate("");
                               setTeamName("");
                               setTaskName("");
-                              setOwnerName("");
                               setTag("");
                               setProjectName("");
                             }}
@@ -367,7 +401,7 @@ function ProjectPage() {
                                           height: "40px",
                                           border: "1px solid #f7eeff",
                                           borderRadius: "50%",
-                                          // backgroundColor: "#9556ce",
+
                                           backgroundColor:
                                             "rgba(137, 19, 251, 0.07)",
                                           color: "#9556ce",
@@ -439,7 +473,7 @@ function ProjectPage() {
                               </span>
                             </td>
                             <td className="px-4 pt-3">
-                              <Link>
+                              <Link to={`/edit/task/${task._id}`}>
                                 {" "}
                                 <i class="bi bi-arrow-right"></i>
                               </Link>

@@ -16,8 +16,10 @@ const TeamTasksPieChart = () => {
     dispatch(fetchTasks());
   }, [dispatch]);
 
-  const completedTasks = tasks.filter((task) => task.status === "Completed");
-  // console.log("completedTasks:- ", completedTasks);  
+  const completedTasks = Array.isArray(tasks)
+    ? tasks?.filter((task) => task.status === "Completed")
+    : [];
+  // console.log("completedTasks:- ", completedTasks);
 
   const teamTaskCount = completedTasks.reduce((acc, task) => {
     const teamName = task.team.name;
