@@ -25,19 +25,22 @@ export const fetchTasks = createAsyncThunk(
 
 export const createNewTask = createAsyncThunk(
   "post/createTask",
-  async (newTask) => {
+  async (newTask, { rejectWithValue }) => {
+    console.log("Payload NEW Task", newTask);
     try {
       const response = await axios.post(
         "https://work-asana-backend.vercel.app/api/tasks",
         newTask
       );
-      console.log("NEW Task", newTask);
-      if (!response) {
-        return "Failed to create new task";
+      console.log("API Response:", response.data);
+
+      if (!response.data) {
+        return rejectWithValue("Failed to create new task: Invalid response");
       }
-      return response.data.savedTask;
+      return response.data;
     } catch (error) {
       console.log("error in creating new task", error);
+      return rejectWithValue(error.response?.data?.message || "Request failed");
     }
   }
 );
@@ -125,7 +128,7 @@ export const taskSlice = createSlice({
       state.status = "loading";
     });
     builder.addCase(createNewTask.fulfilled, (state, action) => {
-      console.log("createNewTask action.payload:", action.payload);
+      console.log("createNewTask action.payload:", action);
       if (action.payload) {
         state.status = "success";
         console.log("action.payload of task view: ", action.payload);

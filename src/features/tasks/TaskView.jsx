@@ -84,7 +84,6 @@ function TaskView() {
     console.log("New task Data:", newTask);
     console.log("Owners before sending:", newTask.owners);
     console.log("Is owners an array?", Array.isArray(newTask.owners));
-    console.log("Is owners an array?", Array.isArray(newTask.owners));
 
     await dispatch(createNewTask(newTask));
     // reset the form
