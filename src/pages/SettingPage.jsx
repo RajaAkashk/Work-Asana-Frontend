@@ -8,9 +8,12 @@ import {
 import { fetchTeams, deleteTeam } from "../features/teams/teamSlice";
 import { fetchTasks, deleteTask } from "../features/tasks/taskSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 
 function SettingPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Extracting teams and projects from Redux store
   const {
@@ -63,6 +66,10 @@ function SettingPage() {
     dispatch(deleteTeam(teamId));
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem("Login token");
+    navigate("/");
+  };
   return (
     <main>
       <div className="container-fluid">
@@ -73,6 +80,18 @@ function SettingPage() {
           <div className="col-md-10">
             <div className="container py-4">
               {/* Teams Section */}
+              <div className="d-flex justify-content-between mb-5">
+                <h2 className="primaryColor">Settings</h2>
+
+                <button
+                  // className="fw-medium fs-5 border border-1 btn primaryBgColor"
+                  className="btn btn-primary fw-medium"
+                  onClick={handleLogOut}
+                >
+                  {/* <i class="fs-5 bi bi-person-circle mx-2"></i> */}
+                  Sign Out
+                </button>
+              </div>
               <div>
                 <h3>Teams</h3>
                 <div>

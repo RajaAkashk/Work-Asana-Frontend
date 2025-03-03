@@ -13,6 +13,7 @@
 .primaryBgColor {
   background-color: rgba(137, 19, 251, 0.03);
 }
+
 /* Style for overlay background */
 .overlay {
   position: fixed;

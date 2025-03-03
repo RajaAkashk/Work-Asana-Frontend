@@ -3,7 +3,6 @@ import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import ProjectView from "../features/projects/ProjectView";
 import TaskView from "../features/tasks/TaskView.jsx";
-import { useNavigate } from "react-router-dom";
 import { fetchProjects } from "../features/projects/projectSlice.js";
 import { fetchTasks } from "../features/tasks/taskSlice.js";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,7 +10,6 @@ import { useSelector, useDispatch } from "react-redux";
 function DashboardPage() {
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
@@ -47,11 +45,6 @@ function DashboardPage() {
     console.log("Searching for:", e.target.value);
   };
   console.log(searchResult);
-
-  const handleLogOut = () => {
-    localStorage.removeItem("Login token");
-    navigate("/");
-  };
 
   const getBadgeClass = (status) => {
     switch (status) {
@@ -131,11 +124,6 @@ function DashboardPage() {
                       </div>
                     </>
                   )}
-                </div>
-                <div className="float-end mt-4">
-                  <button className="btn btn-primary" onClick={handleLogOut}>
-                    Log Out
-                  </button>
                 </div>
               </div>
             </div>
