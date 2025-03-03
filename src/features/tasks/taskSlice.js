@@ -89,10 +89,11 @@ export const updateTask = createAsyncThunk(
         `https://work-asana-backend.vercel.app/api/tasks/${taskId}`,
         updatedTask
       );
+      console.log("updated Task response", updatedTask);
       if (!response) {
         return "Failed to update the task";
       }
-      console.log("response", response.data);
+      console.log("updateTask response", response.data);
       return response.data;
     } catch (error) {
       console.log("error in update task", error);
