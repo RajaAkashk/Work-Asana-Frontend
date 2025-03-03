@@ -6,6 +6,7 @@ import { fetchTaskById, updateTask } from "../features/tasks/taskSlice";
 import { fetchTeams } from "../features/teams/teamSlice";
 import { fetchUser } from "../features/users/userSlice";
 import Select from "react-select";
+import { isNumber } from "chart.js/helpers";
 
 const EditTaskPage = () => {
   const { taskId } = useParams();
@@ -19,6 +20,11 @@ const EditTaskPage = () => {
     error: userError,
   } = useSelector((state) => state.users);
   console.log("users from edit task", users);
+
+  const ownerOptions = users.map((user) => ({
+    value: user._id,
+    label: user.name,
+  }));
 
   const {
     teams,
@@ -69,12 +75,6 @@ const EditTaskPage = () => {
     }
   }, [dispatch, taskId]);
 
-  const ownerOptions = users.map((user) => ({
-    value: user._id,
-    label: user.name,
-  }));
-  console.log("ownerOptions:- ", ownerOptions);
-
   const handleUpdateTask = (e) => {
     e.preventDefault();
     console.log("Updating Task with:", {
@@ -82,7 +82,7 @@ const EditTaskPage = () => {
       updatedTask: {
         name: taskName,
         project: tasks.project._id,
-        team: team,
+        team: tasks.team._id,
         owners: owners.map((owner) => owner.value),
         tags,
         timeToComplete,
@@ -158,6 +158,7 @@ const EditTaskPage = () => {
                       value={project}
                       onChange={(e) => setProject(e.target.value)}
                       className="form-control"
+                      readOnly
                     />
                   </div>
 
@@ -169,9 +170,9 @@ const EditTaskPage = () => {
 
                     <select
                       className="form-select"
+                      value={team}
                       onChange={(e) => setTeam(e.target.value)}
                     >
-                      {" "}
                       <option value={team}>{team}</option>
                       {Array.isArray(teams) && teams.length > 0 ? (
                         teams.map((team) => (
@@ -180,7 +181,7 @@ const EditTaskPage = () => {
                           </option>
                         ))
                       ) : (
-                        <p>Loading...</p>
+                        <option disabled>Loading...</option>
                       )}
                     </select>
                   </div>
