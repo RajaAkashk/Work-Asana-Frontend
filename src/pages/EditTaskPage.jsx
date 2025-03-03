@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTaskById, updateTask } from "../features/tasks/taskSlice";
 import { fetchTeams } from "../features/teams/teamSlice";
 import { fetchUser } from "../features/users/userSlice";
-import Select from "react-select/base";
+import Select from "react-select";
 
 const EditTaskPage = () => {
   const { taskId } = useParams();
@@ -33,7 +33,9 @@ const EditTaskPage = () => {
   const [taskName, setTaskName] = useState("");
   const [project, setProject] = useState("");
   const [team, setTeam] = useState("");
+  console.log("setTeam :- ", team);
   const [owners, setOwners] = useState([]);
+  console.log("setOwner :- ", owners);
   const [tags, setTags] = useState([]);
   const [timeToComplete, setTimeToComplete] = useState("");
   const [status, setStatus] = useState("");
@@ -80,7 +82,7 @@ const EditTaskPage = () => {
       updatedTask: {
         name: taskName,
         project: tasks.project._id,
-        team: tasks.team._id,
+        team: team,
         owners: owners.map((owner) => owner.value),
         tags,
         timeToComplete,
@@ -95,7 +97,7 @@ const EditTaskPage = () => {
           name: taskName,
           project: tasks.project._id,
           team: tasks.team._id,
-          owners: tasks.owners[0]._id,
+          owners: owners.map((owner) => owner.value),
           tags,
           timeToComplete,
           status,
@@ -173,7 +175,9 @@ const EditTaskPage = () => {
                       <option value={team}>{team}</option>
                       {Array.isArray(teams) && teams.length > 0 ? (
                         teams.map((team) => (
-                          <option value={team._id}>{team.name}</option>
+                          <option key={team._id} value={team._id}>
+                            {team.name}
+                          </option>
                         ))
                       ) : (
                         <p>Loading...</p>
@@ -186,20 +190,13 @@ const EditTaskPage = () => {
                     <label className="form-label" htmlFor="owners">
                       Owners:
                     </label>
-                    {/* <input
-                      id="owners"
-                      value={owners[0].label}
-                      onChange={(e) => setOwners(e.target.value.split(", "))}
-                      className="form-control"
-                    /> */}
+
                     <Select
                       isMulti
                       id="owners"
                       value={owners || []}
                       options={ownerOptions || []}
                       onChange={(selected) => setOwners(selected)}
-                      // onInputChange={() => {}}
-                      // onMenuClose={() => {}}
                       onMenuOpen={() => console.log("Menu Opened")}
                     />
                   </div>
