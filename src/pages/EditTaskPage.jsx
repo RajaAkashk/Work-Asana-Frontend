@@ -4,11 +4,22 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTaskById, updateTask } from "../features/tasks/taskSlice";
 import { fetchTeams } from "../features/teams/teamSlice";
+import { fetchUser } from "../features/users/userSlice";
+import Select from "react-select/base";
 
 const EditTaskPage = () => {
   const { taskId } = useParams();
   const dispatch = useDispatch();
   const { tasks, loading, error } = useSelector((state) => state.tasks);
+  console.log("tasks EditTaskPage ", tasks);
+
+  const {
+    users,
+    loading: userLoading,
+    error: userError,
+  } = useSelector((state) => state.users);
+  console.log("users from edit task", users);
+
   const {
     teams,
     loading: teamLoading,
@@ -34,19 +45,33 @@ const EditTaskPage = () => {
       setTaskName(tasks.name || "");
       setProject(tasks.project?.name || "");
       setTeam(tasks.team?.name || "");
-      setOwners(tasks.owners?.map((data) => data.name) || []);
+      setOwners(
+        tasks.owners?.map((owner) => ({
+          value: owner._id,
+          label: owner.name,
+        })) || []
+      );
       setTags(tasks.tags || []);
       setTimeToComplete(tasks.timeToComplete || "");
       setStatus(tasks.status || "To Do");
       setPriority(tasks.priority || "Low");
     }
   }, [tasks]);
+  console.log("defaultOwners:- ", owners);
 
   useEffect(() => {
     if (taskId) {
       dispatch(fetchTaskById(taskId));
+      dispatch(fetchUser());
+      dispatch(fetchTeams());
     }
   }, [dispatch, taskId]);
+
+  const ownerOptions = users.map((user) => ({
+    value: user._id,
+    label: user.name,
+  }));
+  console.log("ownerOptions:- ", ownerOptions);
 
   const handleUpdateTask = (e) => {
     e.preventDefault();
@@ -56,7 +81,7 @@ const EditTaskPage = () => {
         name: taskName,
         project: tasks.project._id,
         team: tasks.team._id,
-        owners: tasks.owners[0]._id,
+        owners: owners.map((owner) => owner.value),
         tags,
         timeToComplete,
         status,
@@ -139,16 +164,10 @@ const EditTaskPage = () => {
                     <label className="form-label" htmlFor="team">
                       Team:
                     </label>
-                    {/* <input
-                      id="team"
-                      value={team}
-                      onChange={(e) => setTeam(e.target.value)}
-                      className="form-control"
-                    /> */}
+
                     <select
                       className="form-select"
                       onChange={(e) => setTeam(e.target.value)}
-                      value={team}
                     >
                       {" "}
                       <option value={team}>{team}</option>
@@ -162,23 +181,33 @@ const EditTaskPage = () => {
                     </select>
                   </div>
 
-                  {/* Owners */}
-                  <div className="mb-3">
+                  {/**************************** Owners ****************************/}
+                  <div className="mb-3" style={{ zIndex: 1000 }}>
                     <label className="form-label" htmlFor="owners">
                       Owners:
                     </label>
-                    <input
+                    {/* <input
                       id="owners"
-                      value={owners.join(", ")}
+                      value={owners[0].label}
                       onChange={(e) => setOwners(e.target.value.split(", "))}
                       className="form-control"
+                    /> */}
+                    <Select
+                      isMulti
+                      id="owners"
+                      value={owners || []}
+                      options={ownerOptions || []}
+                      onChange={(selected) => setOwners(selected)}
+                      // onInputChange={() => {}}
+                      // onMenuClose={() => {}}
+                      onMenuOpen={() => console.log("Menu Opened")}
                     />
                   </div>
 
                   {/* Tags */}
                   <div className="mb-3">
                     <label className="form-label" htmlFor="tags">
-                      Tags:
+                      Tags (Add tags separated by commas):
                     </label>
                     <input
                       id="tags"
