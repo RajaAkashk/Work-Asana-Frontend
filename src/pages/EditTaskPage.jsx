@@ -178,13 +178,7 @@ const EditTaskPage = () => {
                     <label className="form-label" htmlFor="project">
                       Project:
                     </label>
-                    {/* <input
-                      id="project"
-                      value={project}
-                      onChange={(e) => setProject(e.target.value)}
-                      className="form-control"
-                      readOnly
-                    /> */}
+              
                     <Select
                       id="project"
                       value={project || ""}
