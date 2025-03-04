@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTaskById, updateTask } from "../features/tasks/taskSlice";
 import { fetchTeams } from "../features/teams/teamSlice";
+import { fetchProjects } from "../features/projects/projectSlice";
 import { fetchUser } from "../features/users/userSlice";
 import Select from "react-select";
 import { isNumber } from "chart.js/helpers";
@@ -11,6 +12,7 @@ import { isNumber } from "chart.js/helpers";
 const EditTaskPage = () => {
   const { taskId } = useParams();
   const dispatch = useDispatch();
+
   const { tasks, loading, error } = useSelector((state) => state.tasks);
   console.log("tasks EditTaskPage ", tasks);
 
@@ -33,15 +35,29 @@ const EditTaskPage = () => {
   } = useSelector((state) => state.teams);
   console.log("task Edit page teams:-", teams);
 
+  const teamOptions = teams.map((teamOption) => ({
+    value: teamOption._id,
+    label: teamOption.name,
+  }));
+
+  const {
+    projects,
+    loading: projectLoading,
+    error: projectError,
+  } = useSelector((state) => state.projects);
+
+  const projectOptions = projects.map((projectOption) => ({
+    value: projectOption._id,
+    label: projectOption.name,
+  }));
+
   console.log("taskId", taskId);
 
   const [message, setMessage] = useState(false);
   const [taskName, setTaskName] = useState("");
   const [project, setProject] = useState("");
   const [team, setTeam] = useState("");
-  console.log("setTeam :- ", team);
   const [owners, setOwners] = useState([]);
-  console.log("setOwner :- ", owners);
   const [tags, setTags] = useState([]);
   const [timeToComplete, setTimeToComplete] = useState("");
   const [status, setStatus] = useState("");
@@ -51,8 +67,16 @@ const EditTaskPage = () => {
   useEffect(() => {
     if (tasks && Object.keys(tasks).length > 0) {
       setTaskName(tasks.name || "");
-      setProject(tasks.project?.name || "");
-      setTeam(tasks.team?.name || "");
+      setProject({
+        value: tasks.project?._id || "",
+        label: tasks.project?.name || "",
+      });
+      setTeam(
+        {
+          value: tasks.team?._id || "",
+          label: tasks.team?.name || "",
+        } || {}
+      );
       setOwners(
         tasks.owners?.map((owner) => ({
           value: owner._id,
@@ -72,6 +96,7 @@ const EditTaskPage = () => {
       dispatch(fetchTaskById(taskId));
       dispatch(fetchUser());
       dispatch(fetchTeams());
+      dispatch(fetchProjects());
     }
   }, [dispatch, taskId]);
 
@@ -81,8 +106,8 @@ const EditTaskPage = () => {
       taskId,
       updatedTask: {
         name: taskName,
-        project: tasks.project._id,
-        team: tasks.team._id,
+        project: project.value,
+        team: team.value,
         owners: owners.map((owner) => owner.value),
         tags,
         timeToComplete,
@@ -95,8 +120,8 @@ const EditTaskPage = () => {
         taskId,
         updatedTask: {
           name: taskName,
-          project: tasks.project._id,
-          team: tasks.team._id,
+          project: project.value,
+          team: team.value,
           owners: owners.map((owner) => owner.value),
           tags,
           timeToComplete,
@@ -153,12 +178,19 @@ const EditTaskPage = () => {
                     <label className="form-label" htmlFor="project">
                       Project:
                     </label>
-                    <input
+                    {/* <input
                       id="project"
                       value={project}
                       onChange={(e) => setProject(e.target.value)}
                       className="form-control"
                       readOnly
+                    /> */}
+                    <Select
+                      id="project"
+                      value={project || ""}
+                      options={projectOptions || []}
+                      onChange={(selected) => setProject(selected)}
+                      onMenuOpen={() => console.log("Menu Opened")}
                     />
                   </div>
 
@@ -168,22 +200,13 @@ const EditTaskPage = () => {
                       Team:
                     </label>
 
-                    <select
-                      className="form-select"
-                      value={team}
-                      onChange={(e) => setTeam(e.target.value)}
-                    >
-                      <option value={team}>{team}</option>
-                      {Array.isArray(teams) && teams.length > 0 ? (
-                        teams.map((team) => (
-                          <option key={team._id} value={team._id}>
-                            {team.name}
-                          </option>
-                        ))
-                      ) : (
-                        <option disabled>Loading...</option>
-                      )}
-                    </select>
+                    <Select
+                      id="team"
+                      value={team || ""}
+                      options={teamOptions || []}
+                      onChange={(selected) => setTeam(selected)}
+                      onMenuOpen={() => console.log("Menu Opened")}
+                    />
                   </div>
 
                   {/**************************** Owners ****************************/}
