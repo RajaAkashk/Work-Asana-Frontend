@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [alert, setAlert] = useState(false);
   const [message, setMessage] = useState(false);
   const navigate = useNavigate();
 
@@ -47,7 +48,13 @@ function LoginPage() {
     } catch (error) {
       console.error("Error during login:", error);
       setMessage("Login failed");
-      setTimeout(() => setMessage(""), 1500);
+      setAlert(true);
+      setTimeout(() => {
+        setMessage("");
+        setAlert(false);
+      }, 1500);
+      setPassword("");
+      setEmail("");
     }
   };
 
@@ -57,7 +64,8 @@ function LoginPage() {
         <div className="col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
-              <h2 className="text-center mb-4">Login</h2>
+              <h2 className="text-center mb-2 text-primary">Workasana</h2>
+              <h3 className="text-center mb-4">Log in to your account</h3>
               {message && (
                 <div
                   className={`alert ${
@@ -79,6 +87,7 @@ function LoginPage() {
                     type="email"
                     id="email"
                     className="form-control"
+                    placeholder="Enter your email, e.g., sample@user.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -92,6 +101,7 @@ function LoginPage() {
                   <input
                     type="password"
                     id="password"
+                    placeholder="Enter your password, e.g., sample123"
                     className="form-control"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -99,8 +109,12 @@ function LoginPage() {
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100">
-                  Login
+                <button
+                  type="submit"
+                  className="fw-medium btn btn-primary w-100"
+                  disabled={alert}
+                >
+                  {alert === false ? "Login" : "Loading..."}
                 </button>
               </form>
               <div className="d-flex justify-content-center align-items-center mt-3">
