@@ -14,10 +14,24 @@ const ProjectView = () => {
   const projectStatus = searchParams.get("projectStatus") || "";
 
   useEffect(() => {
+    console.log("projectStatus from URL:", projectStatus);
     dispatch(fetchProjects(projectStatus));
   }, [dispatch, projectStatus]);
 
-  // console.log("Project Data:", projects);
+
+  useEffect(() => {
+    console.log("Redux projects state:", projects);
+  }, [projects]);
+
+  const statusFilterHandler = (value) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (value) {
+      newParams.set("projectStatus", value);
+    } else {
+      newParams.delete("projectStatus");
+    }
+    setSearchParams(newParams);
+  };
 
   const handleCreateProject = async (e) => {
     e.preventDefault();
@@ -30,16 +44,6 @@ const ProjectView = () => {
     await dispatch(createNewProject(newProject));
     // reset the form
     setShowForm(false);
-  };
-
-  const statusFilterHandler = (value) => {
-    const newParams = new URLSearchParams(searchParams);
-    if (value) {
-      newParams.set("projectStatus", value);
-    } else {
-      newParams.delete("projectStatus");
-    }
-    setSearchParams(newParams);
   };
 
   const getBadgeClass = (status) => {

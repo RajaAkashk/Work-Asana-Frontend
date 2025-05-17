@@ -8,6 +8,7 @@ function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [alert, setAlert] = useState(false);
   const [message, setMessage] = useState(false);
 
   const navigate = useNavigate();
@@ -33,8 +34,11 @@ function SignupPage() {
         setName("");
         setPassword("");
         setEmail("");
+        setAlert(true);
+
         setTimeout(() => {
           setMessage("");
+          setAlert(false);
           navigate("/");
         }, 1500);
       } else {
@@ -43,7 +47,14 @@ function SignupPage() {
     } catch (error) {
       console.error("Error during login:", error);
       setMessage("Registeration failed: " + error.message);
-      setTimeout(() => setMessage(""), 1500);
+      setAlert(true);
+      setTimeout(() => {
+        setMessage("");
+        setAlert(false);
+        setName("");
+        setPassword("");
+        setEmail("");
+      }, 1500);
     }
   };
 
@@ -53,7 +64,8 @@ function SignupPage() {
         <div className="col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
-              <h2 className="text-center mb-4">Sign Up</h2>
+              <h2 className="text-center mb-2 text-primary">Workasana</h2>
+              <h3 className="text-center mb-4">Sign Up</h3>
               {message && (
                 <div
                   className={`alert ${
@@ -76,6 +88,7 @@ function SignupPage() {
                     id="name"
                     className="form-control"
                     value={name}
+                    placeholder="Enter your name"
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
@@ -88,6 +101,7 @@ function SignupPage() {
                     type="email"
                     id="email"
                     className="form-control"
+                    placeholder="Enter email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -101,6 +115,7 @@ function SignupPage() {
                   <input
                     type="password"
                     id="password"
+                    placeholder="Enter password"
                     className="form-control"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -108,8 +123,11 @@ function SignupPage() {
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100">
-                  Sign Up
+                <button
+                  type="submit"
+                  className="fw-medium btn btn-primary w-100"
+                >
+                  {alert === false ? "Sign Up" : "Loading..."}
                 </button>
               </form>
               <div className="d-flex justify-content-center align-items-center mt-3">

@@ -62,6 +62,7 @@ function TaskView() {
       selectedOwner.map((data) => data.value)
     );
   };
+
   const userOptions = users.map((user) => ({
     value: user._id,
     label: user.name,
@@ -178,8 +179,7 @@ function TaskView() {
                     <input
                       type="text"
                       className="form-control mb-2"
-                      // value={taskName}
-                      onChange={(e) => setTaskName(e.target.value)} // Bind to the new member input
+                      onChange={(e) => setTaskName(e.target.value)}
                       placeholder="Enter Task Name"
                     />
                   </div>
@@ -226,7 +226,7 @@ function TaskView() {
                       Estimated Time
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       className="form-control mb-2"
                       value={estimatedTime}
                       onChange={(e) => setEstimatedTime(Number(e.target.value))}
