@@ -44,3 +44,17 @@
 .editAndDeleteBtn {
   background-color: #8913fb12;
 }
+
+.sidebar-container {
+  min-height: 100rem;
+  background: #8913fb12;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* Remove min-height on screens smaller than 768px */
+@media (max-width: 768px) {
+  .sidebar-container {
+    min-height: auto; /* or unset */
+  }
+}

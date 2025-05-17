@@ -71,8 +71,8 @@ function SettingPage() {
     navigate("/");
   };
   return (
-    <main>
-      <div className="container-fluid">
+      <main className="w-100 overflow-hidden">
+        {/* <div className="container-fluid"> */}
         <div className="row">
           <div className="col-md-2">
             <Sidebar />
@@ -222,7 +222,7 @@ function SettingPage() {
             </div>
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </main>
   );
 }

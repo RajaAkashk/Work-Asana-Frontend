@@ -63,72 +63,72 @@ function DashboardPage() {
 
   return (
     <>
-      <main>
-        <div className="container-fluid">
-          <div className="row justify-content-between flex-wrap">
-            <div className="col-md-2">
-              <Sidebar />
-            </div>
-            <div className="col-md-10 py-4">
-              <div className="container">
-                <div className="input-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search"
-                    value={searchQuery}
-                    onChange={handleSearch}
-                  />
-                  <button disabled className="btn btn-outline-secondary">
-                    <i className="bi bi-search"></i>
-                  </button>
-                </div>
-                <div className="row">
-                  {searchResult && searchResult.length > 0 ? (
-                    searchResult.map((data) => (
-                      <div className="col-md-4 mt-4" key={data._id}>
-                        <div className="card h-100">
-                          <div className="card-body">
-                            <span
-                              className={`badge ${getBadgeClass(data.status)}`}
-                            >
-                              {data.status}
-                            </span>
-                            <h5 className="card-title mt-3">{data.name}</h5>
-                            <p className="card-text">{data.description}</p>
-                            <small className="card-text">
-                              {" "}
-                              <strong>Created At: </strong>
-                              {data.createdAt
-                                ? new Date(data.createdAt).toLocaleDateString()
-                                : "N/A"}
-                            </small>
-                          </div>
+      <main className="w-100 overflow-hidden">
+        {/* <div className="container-fluid"> */}
+        <div className="row justify-content-between flex-wrap">
+          <div className="col-md-2 p-0">
+            <Sidebar />
+          </div>
+          <div className="col-md-10 py-4">
+            <div className="container">
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                />
+                <button disabled className="btn btn-outline-secondary">
+                  <i className="bi bi-search"></i>
+                </button>
+              </div>
+              <div className="row">
+                {searchResult && searchResult.length > 0 ? (
+                  searchResult.map((data) => (
+                    <div className="col-md-4 mt-4" key={data._id}>
+                      <div className="card h-100">
+                        <div className="card-body">
+                          <span
+                            className={`badge ${getBadgeClass(data.status)}`}
+                          >
+                            {data.status}
+                          </span>
+                          <h5 className="card-title mt-3">{data.name}</h5>
+                          <p className="card-text">{data.description}</p>
+                          <small className="card-text">
+                            {" "}
+                            <strong>Created At: </strong>
+                            {data.createdAt
+                              ? new Date(data.createdAt).toLocaleDateString()
+                              : "N/A"}
+                          </small>
                         </div>
                       </div>
-                    ))
-                  ) : (
-                    <>
-                      <div className="pt-4">
-                        <div className="mt-4">
-                          {/* Projects  */}
-                          <ProjectView />
-                        </div>
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    <div className="pt-4">
+                      <div className="mt-4">
+                        {/* Projects  */}
+                        <ProjectView />
                       </div>
+                    </div>
 
-                      <div className="py-5">
-                        <div className="mt-4">
-                          {/* Tasks  */}
-                          <TaskView />
-                        </div>
+                    <div className="py-5">
+                      <div className="mt-4">
+                        {/* Tasks  */}
+                        <TaskView />
                       </div>
-                    </>
-                  )}
-                </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
         </div>
+        {/* </div> */}
       </main>
     </>
   );
