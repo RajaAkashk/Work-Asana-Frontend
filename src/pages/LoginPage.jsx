@@ -47,16 +47,33 @@ function LoginPage() {
       }
     } catch (error) {
       console.error("Error during login:", error);
-      setMessage("Login failed");
+      setMessage("Login failed due to invalid credentials.");
       setAlert(true);
       setTimeout(() => {
         setMessage("");
         setAlert(false);
-      }, 1500);
+      }, 2000);
       setPassword("");
       setEmail("");
     }
   };
+
+  //   function LoginScreen() {
+  //   const handleGuestLogin = () => {
+  //     // Create guest session (e.g., generate guest ID)
+  //     const guestId = generateRandomGuestId();
+  //     setSession({ userId: guestId, isGuest: true });
+  //     // Navigate to main app
+  //     navigateToApp();
+  //   };
+
+  //   return (
+  //     <>
+  //       <button onClick={handleLogin}>Login</button>
+  //       <button onClick={handleGuestLogin}>Continue as Guest</button>
+  //     </>
+  //   );
+  // }
 
   return (
     <div className="container mt-5">

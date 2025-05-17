@@ -5,17 +5,15 @@ import Sidebar from "../components/Sidebar";
 function TeamsPage() {
   return (
     <>
-      <main>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-md-2">
-              <Sidebar />
-            </div>
-            <div className="col-md-10">
-              <div className="container py-4">
-                <div>
-                  <TeamView />
-                </div>
+      <main className="w-100 overflow-hidden">
+        <div className="row">
+          <div className="col-md-2">
+            <Sidebar />
+          </div>
+          <div className="col-md-10">
+            <div className="container py-4">
+              <div>
+                <TeamView />
               </div>
             </div>
           </div>

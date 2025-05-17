@@ -114,156 +114,153 @@ function ProjectPage() {
 
   return (
     <>
-      <main>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-md-2">
-              <Sidebar />
-            </div>
-            <div className="col-md-10">
-              <div className="container py-4">
-                {/* <h2>ProjectPage</h2> */}
+      <main className="w-100 overflow-hidden">
+        {/* <div className="container-fluid"> */}
+        <div className="row">
+          <div className="col-md-2">
+            <Sidebar />
+          </div>
+          <div className="col-md-10">
+            <div className="container py-4">
+              {/* <h2>ProjectPage</h2> */}
 
-                <div className="p-4">
-                  <div className="mb-2 d-flex flex-wrap justify-content-between">
-                    {/* Sort Buttons */}
-                    <div>
-                      <span className="fw-medium">Sort By: </span>
-                      <button
-                        onClick={() => updateFilter("prioritySort", "Low-High")}
-                        className={`sortButton badge p-2 text-bg-light border ms-2 ${
-                          prioritySort === "Low-High" ? "active" : ""
-                        }`}
-                      >
-                        Priority Low-High
-                      </button>
-                      <button
-                        onClick={() => updateFilter("prioritySort", "High-Low")}
-                        className={`sortButton badge p-2 text-bg-light border ms-2 ${
-                          prioritySort === "High-Low" ? "active" : ""
-                        }`}
-                      >
-                        Priority High-Low
-                      </button>
-                      <button
-                        onClick={() =>
-                          updateFilter("dateSort", "Newest-Oldest")
-                        }
-                        className={`sortButton badge p-2 text-bg-light border ms-2 ${
-                          dateSort === "Newest-Oldest" ? "active" : ""
-                        }`}
-                      >
-                        Newest First
-                      </button>
-                      <button
-                        onClick={() =>
-                          updateFilter("dateSort", "Oldest-Newest")
-                        }
-                        className={`sortButton badge p-2 text-bg-light border ms-2 ${
-                          dateSort === "Oldest-Newest" ? "active" : ""
-                        }`}
-                      >
-                        Oldest First
-                      </button>
-                    </div>
-
-                    {/* Filter Dropdown */}
-                    <div className="d-flex align-items-center">
-                      <select
-                        value={taskStatus}
-                        onChange={(e) =>
-                          updateFilter("taskStatus", e.target.value)
-                        }
-                        className="form-select"
-                      >
-                        <option value="">Filter</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                        <option value="To Do">To Do</option>
-                        <option value="Blocked">Blocked</option>
-                      </select>
-                      <button
-                        onClick={() => setShowForm(true)}
-                        className="col-md-6 btn btn-primary ms-3 d-flex"
-                      >
-                        <i class="bi bi-plus-lg me-2"></i> <span>New Task</span>
-                      </button>
-                    </div>
+              <div className="p-4">
+                <div className="mb-2 d-flex flex-wrap justify-content-between gap-3">
+                  {/* Sort Buttons */}
+                  <div className="d-flex flex-wrap align-items-center gap-2 w-100 w-md-auto">
+                    <span className="fw-medium me-2">Sort By:</span>
+                    <button
+                      onClick={() => updateFilter("prioritySort", "Low-High")}
+                      className={`sortButton badge p-2 text-bg-light border ${
+                        prioritySort === "Low-High" ? "active" : ""
+                      }`}
+                    >
+                      Priority Low-High
+                    </button>
+                    <button
+                      onClick={() => updateFilter("prioritySort", "High-Low")}
+                      className={`sortButton badge p-2 text-bg-light border ${
+                        prioritySort === "High-Low" ? "active" : ""
+                      }`}
+                    >
+                      Priority High-Low
+                    </button>
+                    <button
+                      onClick={() => updateFilter("dateSort", "Newest-Oldest")}
+                      className={`sortButton badge p-2 text-bg-light border ${
+                        dateSort === "Newest-Oldest" ? "active" : ""
+                      }`}
+                    >
+                      Newest First
+                    </button>
+                    <button
+                      onClick={() => updateFilter("dateSort", "Oldest-Newest")}
+                      className={`sortButton badge p-2 text-bg-light border ${
+                        dateSort === "Oldest-Newest" ? "active" : ""
+                      }`}
+                    >
+                      Oldest First
+                    </button>
                   </div>
 
-                  {showForm && (
-                    <div className="overlay">
-                      <div className="form-container">
-                        <h3>Create New Task</h3>
+                  {/* Filter Dropdown + Button */}
+                  <div className="d-flex flex-wrap align-items-center gap-2 w-10 w-md-auto">
+                    <select
+                      value={taskStatus}
+                      onChange={(e) =>
+                        updateFilter("taskStatus", e.target.value)
+                      }
+                      className="form-select"
+                    >
+                      <option value="">Filter</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Completed">Completed</option>
+                      <option value="To Do">To Do</option>
+                      <option value="Blocked">Blocked</option>
+                    </select>
+                    <button
+                      onClick={() => setShowForm(true)}
+                      className="btn btn-primary d-flex align-items-center"
+                    >
+                      <i className="bi bi-plus-lg me-2"></i>{" "}
+                      <span>New Task</span>
+                    </button>
+                  </div>
+                </div>
 
-                        <form onSubmit={handleCreateTask}>
-                          <div className="my-3">
-                            <div className="mb-3">
+                {showForm && (
+                  <div className="overlay">
+                    <div className="form-container">
+                      <h3>Create New Task</h3>
+
+                      <form onSubmit={handleCreateTask}>
+                        <div className="my-3">
+                          <div className="mb-3">
+                            <label className="form-label fw-medium">
+                              Select Project
+                            </label>
+                            <select
+                              className="form-select"
+                              onChange={(e) => setProjectName(e.target.value)}
+                            >
+                              <option value="">select</option>
+                              {projects.length === 0
+                                ? "Loading..."
+                                : projects.map((project) => (
+                                    <option
+                                      key={project._id}
+                                      value={project._id}
+                                    >
+                                      {project.name}
+                                    </option>
+                                  ))}
+                            </select>
+                          </div>
+                          <div className="row flex-wrap">
+                            <div className="mb-3 col-md-6">
                               <label className="form-label fw-medium">
-                                Select Project
+                                Select Owner
+                              </label>
+
+                              <Select
+                                isMulti
+                                value={ownerNames}
+                                onChange={handleMultiSelectChange}
+                                options={userOptions}
+                                onMenuOpen={() => console.log("Menu Opened")}
+                              />
+                            </div>
+                            <div className="mb-3 col-md-6">
+                              <label className="form-label fw-medium">
+                                Task Name
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control mb-2"
+                                // value={taskName}
+                                onChange={(e) => setTaskName(e.target.value)} // Bind to the new member input
+                                placeholder="Enter Task Name"
+                              />
+                            </div>
+                            <div className="mb-3 col-md-6">
+                              <label className="form-label fw-medium">
+                                Select Team
                               </label>
                               <select
                                 className="form-select"
-                                onChange={(e) => setProjectName(e.target.value)}
+                                onChange={(e) => setTeamName(e.target.value)}
                               >
                                 <option value="">select</option>
-                                {projects.length === 0
+                                {teams.length === 0
                                   ? "Loading..."
-                                  : projects.map((project) => (
-                                      <option
-                                        key={project._id}
-                                        value={project._id}
-                                      >
-                                        {project.name}
+                                  : teams.map((team) => (
+                                      <option key={team._id} value={team._id}>
+                                        {team.name}
                                       </option>
                                     ))}
                               </select>
                             </div>
-                            <div className="row flex-wrap">
-                              <div className="mb-3 col-md-6">
-                                <label className="form-label fw-medium">
-                                  Select Owner
-                                </label>
-
-                                <Select
-                                  isMulti
-                                  value={ownerNames}
-                                  onChange={handleMultiSelectChange}
-                                  options={userOptions}
-                                  onMenuOpen={() => console.log("Menu Opened")}
-                                />
-                              </div>
-                              <div className="mb-3 col-md-6">
-                                <label className="form-label fw-medium">
-                                  Task Name
-                                </label>
-                                <input
-                                  type="text"
-                                  className="form-control mb-2"
-                                  // value={taskName}
-                                  onChange={(e) => setTaskName(e.target.value)} // Bind to the new member input
-                                  placeholder="Enter Task Name"
-                                />
-                              </div>
-                              <div className="mb-3 col-md-6">
-                                <label className="form-label fw-medium">
-                                  Select Team
-                                </label>
-                                <select
-                                  className="form-select"
-                                  onChange={(e) => setTeamName(e.target.value)}
-                                >
-                                  <option value="">select</option>
-                                  {teams.length === 0
-                                    ? "Loading..."
-                                    : teams.map((team) => (
-                                        <option key={team._id} value={team._id}>
-                                          {team.name}
-                                        </option>
-                                      ))}
-                                </select>
-                              </div>
-                              {/* <div className="mb-3 col-md-6">
+                            {/* <div className="mb-3 col-md-6">
                     <label className="form-label fw-medium">Select Tags</label>
                     <select
                       className="form-select"
@@ -285,58 +282,59 @@ function ProjectPage() {
                     </select>
                   </div> */}
 
-                              <div className="col-md-6">
-                                <label className="form-label fw-medium">
-                                  Estimated Time
-                                </label>
-                                <input
-                                  type="text"
-                                  className="form-control mb-2"
-                                  value={estimatedTime}
-                                  onChange={(e) =>
-                                    setEstimatedTime(Number(e.target.value))
-                                  }
-                                  placeholder="Enter Time in Days"
-                                />
-                              </div>
+                            <div className="col-md-6">
+                              <label className="form-label fw-medium">
+                                Estimated Time
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control mb-2"
+                                value={estimatedTime}
+                                onChange={(e) =>
+                                  setEstimatedTime(Number(e.target.value))
+                                }
+                                placeholder="Enter Time in Days"
+                              />
                             </div>
                           </div>
+                        </div>
 
-                          <button
-                            type="submit"
-                            className="btn  fw-medium  w-100 mb-2"
-                            style={{
-                              background: "rgba(137, 19, 251, 0.07)",
-                              color: "#6818F1",
-                            }}
-                          >
-                            Create Task
-                          </button>
+                        <button
+                          type="submit"
+                          className="btn  fw-medium  w-100 mb-2"
+                          style={{
+                            background: "rgba(137, 19, 251, 0.07)",
+                            color: "#6818F1",
+                          }}
+                        >
+                          Create Task
+                        </button>
 
-                          <button
-                            className="btn text-secondary bg-secondary-subtle fw-medium w-100 mb-2"
-                            type="button"
-                            onClick={() => {
-                              setShowForm(false);
-                              setOwnerNames([]);
-                              setOwnersId([]);
-                              setEstimatedTime("");
-                              setDueDate("");
-                              setTeamName("");
-                              setTaskName("");
-                              setTag("");
-                              setProjectName("");
-                            }}
-                          >
-                            Cancel
-                          </button>
-                        </form>
-                      </div>
+                        <button
+                          className="btn text-secondary bg-secondary-subtle fw-medium w-100 mb-2"
+                          type="button"
+                          onClick={() => {
+                            setShowForm(false);
+                            setOwnerNames([]);
+                            setOwnersId([]);
+                            setEstimatedTime("");
+                            setDueDate("");
+                            setTeamName("");
+                            setTaskName("");
+                            setTag("");
+                            setProjectName("");
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </form>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {/* Task List */}
-                  <table className="table table-bordered">
+                {/* Task List */}
+                <div className="table-responsive">
+                  <table className="table table-bordered overflow-x-scroll">
                     <thead>
                       <tr>
                         <th style={{ background: "#f7eeff", border: "0px" }}>
@@ -494,6 +492,7 @@ function ProjectPage() {
             </div>
           </div>
         </div>
+        {/* </div> */}
       </main>
     </>
   );

@@ -32,7 +32,7 @@ const EditProjectPage = () => {
       );
     }
   }, [projects]);
-  
+
   useEffect(() => {
     if (projectId) {
       dispatch(fetchProjectById(projectId));
@@ -58,88 +58,86 @@ const EditProjectPage = () => {
   };
 
   return (
-    <main>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-2">
-            <Sidebar />
-          </div>
-          <div className="col-md-10 px-4">
-            <div className="container mt-4">
-              <Link
-                className="primaryColor text-decoration-none underline fs-5 fw-medium"
-                to="/setting"
+    <main className="w-100 overflow-hidden">
+      <div className="row">
+        <div className="col-md-2">
+          <Sidebar />
+        </div>
+        <div className="col-md-10 px-4">
+          <div className="container mt-4">
+            <Link
+              className="primaryColor text-decoration-none underline fs-5 fw-medium"
+              to="/setting"
+            >
+              <i className="bi bi-arrow-left"></i> Back to Setting
+            </Link>
+            {loading ? (
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            ) : error ? (
+              <p className="text-danger">Error fetching projects details.</p>
+            ) : projects && Object.keys(projects).length > 0 ? ( // Ensure projects is not an empty object
+              <form
+                className="mt-4 p-4 primaryBgColor rounded shadow-sm"
+                onSubmit={handleUpdateProject}
               >
-                <i className="bi bi-arrow-left"></i> Back to Setting
-              </Link>
-              {loading ? (
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Loading...</span>
+                <div className="mb-3">
+                  <label className="form-label" htmlFor="projectName">
+                    Project Name:
+                  </label>
+                  <input
+                    id="projectName"
+                    value={projectName || ""}
+                    onChange={(e) => setProjectName(e.target.value)}
+                    className="form-control"
+                  />
                 </div>
-              ) : error ? (
-                <p className="text-danger">Error fetching projects details.</p>
-              ) : projects && Object.keys(projects).length > 0 ? ( // Ensure projects is not an empty object
-                <form
-                  className="mt-4 p-4 primaryBgColor rounded shadow-sm"
-                  onSubmit={handleUpdateProject}
-                >
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="projectName">
-                      Project Name:
-                    </label>
-                    <input
-                      id="projectName"
-                      value={projectName || ""}
-                      onChange={(e) => setProjectName(e.target.value)}
-                      className="form-control"
-                    />
-                  </div>
 
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="projectDescription">
-                      Description:
-                    </label>
-                    <textarea
-                      id="projectDescription"
-                      value={projectDescription || ""}
-                      onChange={(e) => setProjectDescription(e.target.value)}
-                      className="form-control"
-                    />
-                  </div>
+                <div className="mb-3">
+                  <label className="form-label" htmlFor="projectDescription">
+                    Description:
+                  </label>
+                  <textarea
+                    id="projectDescription"
+                    value={projectDescription || ""}
+                    onChange={(e) => setProjectDescription(e.target.value)}
+                    className="form-control"
+                  />
+                </div>
 
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="projectStatus">
-                      Status:
-                    </label>
-                    <select
-                      id="projectStatus"
-                      value={projectStatus || "Not Started"}
-                      onChange={(e) => setProjectStatus(e.target.value)}
-                      className="form-control"
-                    >
-                      <option value="To Do">To Do</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="Completed">Completed</option>
-                      <option value="Blocked">Blocked</option>
-                    </select>
-                  </div>
+                <div className="mb-3">
+                  <label className="form-label" htmlFor="projectStatus">
+                    Status:
+                  </label>
+                  <select
+                    id="projectStatus"
+                    value={projectStatus || "Not Started"}
+                    onChange={(e) => setProjectStatus(e.target.value)}
+                    className="form-control"
+                  >
+                    <option value="To Do">To Do</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Blocked">Blocked</option>
+                  </select>
+                </div>
 
-                  <button type="submit" className="btn btn-outline-primary">
-                    Update Project
-                  </button>
-                  {message && (
-                    <div
-                      className="mt-4 alert alert-light text-center"
-                      role="alert"
-                    >
-                      <p className="m-0 p-0 fw-medium">Updated successfully</p>
-                    </div>
-                  )}
-                </form>
-              ) : (
-                <p className="fs-5 fw-medium">Project Not Found</p>
-              )}
-            </div>
+                <button type="submit" className="btn btn-outline-primary">
+                  Update Project
+                </button>
+                {message && (
+                  <div
+                    className="mt-4 alert alert-light text-center"
+                    role="alert"
+                  >
+                    <p className="m-0 p-0 fw-medium">Updated successfully</p>
+                  </div>
+                )}
+              </form>
+            ) : (
+              <p className="fs-5 fw-medium">Project Not Found</p>
+            )}
           </div>
         </div>
       </div>
