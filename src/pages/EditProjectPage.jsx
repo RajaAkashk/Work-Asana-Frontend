@@ -60,10 +60,10 @@ const EditProjectPage = () => {
   return (
     <main className="w-100 overflow-hidden">
       <div className="row">
-        <div className="col-md-2">
+        <div className="col-xl-2 col-md-3">
           <Sidebar />
         </div>
-        <div className="col-md-10 px-4">
+        <div className="col-xl-10 col-md-9 pe-md-5 ps-md-4 px-4 ps-xl-4 pb-3">
           <div className="container mt-4">
             <Link
               className="primaryColor text-decoration-none underline fs-5 fw-medium"
