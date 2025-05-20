@@ -46,7 +46,7 @@ function TeamView() {
 
   return (
     <div>
-      <div className=" align-items-center d-flex justify-content-between">
+      <div className="align-items-center d-flex justify-content-between">
         <div>
           <span className="fs-2 fw-medium">Teams</span>
         </div>
@@ -146,7 +146,7 @@ function TeamView() {
       ) : Array.isArray(teams) && teams.length > 0 ? (
         <div className="row flex-wrap">
           {teams.map((team) => (
-            <div className="col-md-4 mt-3" key={team?._id}>
+            <div className="col-xl-4 col-md-6  mt-3" key={team?._id}>
               <div className="card h-100" style={{ background: "#f7eeff" }}>
                 <Link
                   to={`/team/${team?._id}`}
@@ -195,7 +195,7 @@ function TeamView() {
           ))}
         </div>
       ) : (
-        <p>There are no  teams.</p>
+        <p>There are no teams.</p>
       )}
     </div>
   );

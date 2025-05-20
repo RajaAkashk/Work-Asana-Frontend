@@ -66,12 +66,12 @@ function DashboardPage() {
       <main className="w-100 overflow-hidden">
         {/* <div className="container-fluid"> */}
         <div className="row justify-content-between flex-wrap">
-          <div className="col-md-2 p-0">
+          <div className="col-xl-2 col-md-3">
             <Sidebar />
           </div>
-          <div className="col-md-10 py-4">
+          <div className="col-xl-10 col-md-9">
             <div className="container">
-              <div className="input-group">
+              <div className="input-group mt-4">
                 <input
                   type="text"
                   className="form-control"
@@ -86,7 +86,7 @@ function DashboardPage() {
               <div className="row">
                 {searchResult && searchResult.length > 0 ? (
                   searchResult.map((data) => (
-                    <div className="col-md-4 mt-4" key={data._id}>
+                    <div className="col-md-6 col-xl-4 mt-4" key={data._id}>
                       <div className="card h-100">
                         <div className="card-body">
                           <span

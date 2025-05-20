@@ -279,7 +279,7 @@ function TaskView() {
         ) : (
           Array.isArray(tasks) &&
           tasks?.map((task) => (
-            <div className="col-md-4" key={task?._id}>
+            <div className="col-md-6 col-xl-4" key={task?._id}>
               <div className="card h-100">
                 <div className="card-body">
                   <span

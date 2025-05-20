@@ -18,7 +18,6 @@ const ProjectView = () => {
     dispatch(fetchProjects(projectStatus));
   }, [dispatch, projectStatus]);
 
-
   useEffect(() => {
     console.log("Redux projects state:", projects);
   }, [projects]);
@@ -148,7 +147,7 @@ const ProjectView = () => {
           <p>Error in fetching projects</p>
         ) : projects.length > 0 ? (
           projects.map((project) => (
-            <div className="col-md-4" key={project._id}>
+            <div className="col-md-6 col-xl-4" key={project._id}>
               <div className="card h-100">
                 <div className="card-body">
                   <span className={`badge ${getBadgeClass(project.status)}`}>

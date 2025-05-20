@@ -117,17 +117,17 @@ function ProjectPage() {
       <main className="w-100 overflow-hidden">
         {/* <div className="container-fluid"> */}
         <div className="row">
-          <div className="col-md-2">
+          <div className="col-xl-2 col-md-3">
             <Sidebar />
           </div>
-          <div className="col-md-10">
+          <div className="col-xl-10 col-md-9">
             <div className="container py-4">
               {/* <h2>ProjectPage</h2> */}
 
               <div className="p-4">
-                <div className="mb-2 d-flex flex-wrap justify-content-between gap-3">
-                  {/* Sort Buttons */}
-                  <div className="d-flex flex-wrap align-items-center gap-2 w-100 w-md-auto">
+                <div className="mb-5 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                  {/* Left: Sort Buttons */}
+                  <div className="d-flex flex-wrap align-items-center gap-2">
                     <span className="fw-medium me-2">Sort By:</span>
                     <button
                       onClick={() => updateFilter("prioritySort", "Low-High")}
@@ -163,14 +163,14 @@ function ProjectPage() {
                     </button>
                   </div>
 
-                  {/* Filter Dropdown + Button */}
-                  <div className="d-flex flex-wrap align-items-center gap-2 w-10 w-md-auto">
+                  {/* Right: Filter Dropdown + New Task Button */}
+                  <div className="d-flex flex-wrap align-items-center gap-2 ms-md-auto">
                     <select
                       value={taskStatus}
                       onChange={(e) =>
                         updateFilter("taskStatus", e.target.value)
                       }
-                      className="form-select"
+                      className="form-select w-auto"
                     >
                       <option value="">Filter</option>
                       <option value="In Progress">In Progress</option>
@@ -182,7 +182,7 @@ function ProjectPage() {
                       onClick={() => setShowForm(true)}
                       className="btn btn-primary d-flex align-items-center"
                     >
-                      <i className="bi bi-plus-lg me-2"></i>{" "}
+                      <i className="bi bi-plus-lg me-2"></i>
                       <span>New Task</span>
                     </button>
                   </div>

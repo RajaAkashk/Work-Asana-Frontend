@@ -34,10 +34,10 @@ function TeamDetailsPage() {
     <>
       <main className="w-100 overflow-hidden">
         <div className="row">
-          <div className="col-md-2">
+          <div className="col-xl-2 col-md-3">
             <Sidebar />
           </div>
-          <div className="col-md-10">
+          <div className="col-xl-10 col-md-9">
             <div className="container py-4">
               <Link
                 className="text-decoration-none text-primary underline fs-5 fw-medium"
@@ -101,7 +101,7 @@ function TeamDetailsPage() {
                 ) : teams ? (
                   <div>
                     <div
-                      className="col-md-3 mt-5 h-100"
+                      className="col-xl-3 col-md-6 mt-5 h-100"
                       // style={{ background: "#f7eeff" }}
                     >
                       <div>
