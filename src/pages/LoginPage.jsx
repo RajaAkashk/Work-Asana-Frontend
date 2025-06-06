@@ -13,7 +13,7 @@ function LoginPage() {
   useEffect(() => {
     // if token is already in local storage
     const token = localStorage.getItem("Login token");
-    console.log("token:-", token);
+    // console.log("token:-", token);
     if (token) {
       navigate("/dashboard");
     }
@@ -21,7 +21,7 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Email:", email, "Password:", password);
+    // console.log("Email:", email, "Password:", password);
 
     const user = {
       email: email,
@@ -126,6 +126,7 @@ function LoginPage() {
                     placeholder="Enter your email, e.g., sample@user.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
                     required
                   />
                 </div>
@@ -141,6 +142,7 @@ function LoginPage() {
                     className="form-control"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
                     required
                   />
                 </div>

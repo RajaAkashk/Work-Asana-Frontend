@@ -29,7 +29,7 @@ export const createNewTag = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      console.log("error occured whie creating new tag", error);
+      console.error("error occured whie creating new tag", error);
     }
   }
 );

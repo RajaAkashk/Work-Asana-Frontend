@@ -42,9 +42,9 @@ function DashboardPage() {
 
     setSearchResult([...filteredProjectsResults, ...filteredTasksResults]); // Replace previous results
 
-    console.log("Searching for:", e.target.value);
+    // console.log("Searching for:", e.target.value);
   };
-  console.log(searchResult);
+  // console.log(searchResult);
 
   const getBadgeClass = (status) => {
     switch (status) {

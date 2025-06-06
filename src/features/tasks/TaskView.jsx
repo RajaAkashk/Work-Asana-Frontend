@@ -23,7 +23,7 @@ function TaskView() {
 
   const { tasks, status, error } = useSelector((state) => state.tasks);
 
-  console.log("Tasks ", tasks);
+  // console.log("Tasks ", tasks);
 
   const { users } = useSelector((state) => state.users);
   const { projects } = useSelector((state) => state.projects);
@@ -40,7 +40,7 @@ function TaskView() {
   }, [taskStatus, dispatch]);
 
   // console.log("fetch Tags from task view: ", tags);
-  console.log("fetch User from task view: ", users);
+  // console.log("fetch User from task view: ", users);
 
   const statusFilterHandler = (value) => {
     const newParams = new URLSearchParams(searchParams);
@@ -56,22 +56,22 @@ function TaskView() {
   const handleMultiSelectChange = (selectedOwner) => {
     setOwnerNames(selectedOwner);
     setOwnersId(selectedOwner.map((data) => data.value));
-    console.log("selectedOwner", selectedOwner);
-    console.log(
-      "setOwnersId",
-      selectedOwner.map((data) => data.value)
-    );
+    // console.log("selectedOwner", selectedOwner);
+    // console.log(
+    //   "setOwnersId",
+    //   selectedOwner.map((data) => data.value)
+    // );
   };
 
   const userOptions = users.map((user) => ({
     value: user._id,
     label: user.name,
   }));
-  console.log("userOptions", userOptions);
+  // console.log("userOptions", userOptions);
 
   const handleCreateTask = async (e) => {
     e.preventDefault();
-    console.log("Create project button clicked!");
+    // console.log("Create project button clicked!");
     const newTask = {
       name: taskName,
       project: projectName,
@@ -82,9 +82,9 @@ function TaskView() {
       status: "To Do",
       priority: "Low",
     };
-    console.log("New task Data:", newTask);
-    console.log("Owners before sending:", newTask.owners);
-    console.log("Is owners an array?", Array.isArray(newTask.owners));
+    // console.log("New task Data:", newTask);
+    // console.log("Owners before sending:", newTask.owners);
+    // console.log("Is owners an array?", Array.isArray(newTask.owners));
 
     await dispatch(createNewTask(newTask));
     // reset the form
@@ -171,7 +171,7 @@ function TaskView() {
                       value={ownerNames}
                       onChange={handleMultiSelectChange}
                       options={userOptions}
-                      onMenuOpen={() => console.log("Menu Opened")}
+                      // onMenuOpen={() => console.log("Menu Opened")}
                     />
                   </div>
                   <div className="mb-3 col-md-6">

@@ -17,7 +17,7 @@ function TeamView() {
   useEffect(() => {
     dispatch(fetchTeams());
   }, [dispatch]);
-  console.log("teams TeamView", teams);
+  // console.log("teams TeamView", teams);
 
   // Handle adding new member
   const handleAddMember = () => {

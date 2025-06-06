@@ -13,7 +13,7 @@ export const fetchTeams = createAsyncThunk("fetch/fetchTeams", async () => {
 
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });
 
@@ -27,7 +27,7 @@ export const fetchTeamById = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 );
@@ -40,7 +40,7 @@ export const addNewTeam = createAsyncThunk("post/addTeam", async (newTeam) => {
     );
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });
 
@@ -52,10 +52,10 @@ export const addNewTeamMember = createAsyncThunk(
         `https://work-asana-backend.vercel.app/api/teams/member/${teamId}`,
         { member: newTeamMember }
       );
-      console.log("addNewTeamMember", response.data);
+      // console.log("addNewTeamMember", response.data);
       return response.data;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return rejectWithValue("Failed to add member");
     }
   }
@@ -74,7 +74,7 @@ export const deleteTeam = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      console.log("Error occured while deleting team", error);
+      console.error("Error occured while deleting team", error);
       return "Error in deleting team";
     }
   }
@@ -91,10 +91,10 @@ export const updateTeam = createAsyncThunk(
       if (!response) {
         return "Failed to update team";
       }
-      console.log("updatedTeam", response.data);
+      // console.log("updatedTeam", response.data);
       return response.data;
     } catch (error) {
-      console.log("Error occured while updating team", error);
+      console.error("Error occured while updating team", error);
       return "Error in updating team";
     }
   }
@@ -150,9 +150,9 @@ export const teamSlice = createSlice({
     });
     builder.addCase(addNewTeamMember.fulfilled, (state, action) => {
       state.status = "success";
-      console.log(" action.payload addNewTeamMember", action.payload);
+      // console.log(" action.payload addNewTeamMember", action.payload);
       state.teams = action.payload;
-      console.log("TEAMS FROM addNewTeamMember", JSON.stringify(state.teams));
+      // console.log("TEAMS FROM addNewTeamMember", JSON.stringify(state.teams));
     });
     builder.addCase(addNewTeamMember.rejected, (state, action) => {
       state.status = "error";

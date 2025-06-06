@@ -14,12 +14,12 @@ const ProjectView = () => {
   const projectStatus = searchParams.get("projectStatus") || "";
 
   useEffect(() => {
-    console.log("projectStatus from URL:", projectStatus);
+    // console.log("projectStatus from URL:", projectStatus);
     dispatch(fetchProjects(projectStatus));
   }, [dispatch, projectStatus]);
 
   useEffect(() => {
-    console.log("Redux projects state:", projects);
+    // console.log("Redux projects state:", projects);
   }, [projects]);
 
   const statusFilterHandler = (value) => {
@@ -34,12 +34,12 @@ const ProjectView = () => {
 
   const handleCreateProject = async (e) => {
     e.preventDefault();
-    console.log("Create project button clicked!");
+    // console.log("Create project button clicked!");
     const newProject = {
       name: projectName,
       description: projectDescription,
     };
-    console.log("New Project Data:", newProject);
+    // console.log("New Project Data:", newProject);
     await dispatch(createNewProject(newProject));
     // reset the form
     setShowForm(false);
