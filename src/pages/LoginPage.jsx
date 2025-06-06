@@ -52,28 +52,46 @@ function LoginPage() {
       setTimeout(() => {
         setMessage("");
         setAlert(false);
-      }, 2000);
+      }, 10000);
       setPassword("");
       setEmail("");
     }
   };
 
-  //   function LoginScreen() {
-  //   const handleGuestLogin = () => {
-  //     // Create guest session (e.g., generate guest ID)
-  //     const guestId = generateRandomGuestId();
-  //     setSession({ userId: guestId, isGuest: true });
-  //     // Navigate to main app
-  //     navigateToApp();
-  //   };
+  const handleGuestLogin = async () => {
+    try {
+      // Hardcoded guest user credentials
+      const guestUser = {
+        email: "sample@user.com",
+        password: "sample123",
+      };
 
-  //   return (
-  //     <>
-  //       <button onClick={handleLogin}>Login</button>
-  //       <button onClick={handleGuestLogin}>Continue as Guest</button>
-  //     </>
-  //   );
-  // }
+      const response = await axios.post(
+        "https://work-asana-backend.vercel.app/api/users/login",
+        guestUser
+      );
+
+      if (response.data.token) {
+        localStorage.setItem("Login token", response.data.token);
+        setMessage("Logged in as Guest");
+
+        setTimeout(() => {
+          navigate("/dashboard");
+          setMessage("");
+        }, 1500);
+      } else {
+        setMessage("Guest login failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during guest login:", error);
+      setMessage("Guest login failed due to server error.");
+      setAlert(true);
+      setTimeout(() => {
+        setMessage("");
+        setAlert(false);
+      }, 2000);
+    }
+  };
 
   return (
     <div className="container mt-5">
@@ -86,7 +104,8 @@ function LoginPage() {
               {message && (
                 <div
                   className={`alert ${
-                    message === "Login successful"
+                    message === "Login successful" ||
+                    message === "Logged in as Guest"
                       ? "alert-success"
                       : "alert-danger"
                   } text-center`}
@@ -134,6 +153,12 @@ function LoginPage() {
                   {alert === false ? "Login" : "Loading..."}
                 </button>
               </form>
+              <button
+                className="btn btn-secondary w-100 fw-medium mt-2"
+                onClick={handleGuestLogin}
+              >
+                Continue as Guest
+              </button>
               <div className="d-flex justify-content-center align-items-center mt-3">
                 <p className="mb-0">Not registered yet? </p>
                 <Link
