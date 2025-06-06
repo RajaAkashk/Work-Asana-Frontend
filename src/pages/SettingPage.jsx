@@ -39,7 +39,7 @@ function SettingPage() {
         dateSort: "",
       })
     );
-    console.log("dispatch(fetchTasks()) :-", tasks);
+    // console.log("dispatch(fetchTasks()) :-", tasks);
   }, [dispatch]);
 
   useEffect(() => {
@@ -57,11 +57,11 @@ function SettingPage() {
   };
 
   const deleteProjectHandler = (projectId) => {
-    console.log("projectId:", projectId);
+    // console.log("projectId:", projectId);
     dispatch(deleteProject(projectId));
   };
   const deleteTeamHandler = (teamId) => {
-    console.log("teamId:", teamId);
+    // console.log("teamId:", teamId);
     dispatch(deleteTeam(teamId));
   };
 

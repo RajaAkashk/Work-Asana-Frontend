@@ -14,7 +14,7 @@ export const fetchTasks = createAsyncThunk(
       const response = await axios.get(
         `https://work-asana-backend.vercel.app/api/tasks?${queryParams.toString()}`
       );
-      console.log("Fetched tasks:", response.data);
+      // console.log("Fetched tasks:", response.data);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -26,20 +26,20 @@ export const fetchTasks = createAsyncThunk(
 export const createNewTask = createAsyncThunk(
   "post/createTask",
   async (newTask, { rejectWithValue }) => {
-    console.log("Payload NEW Task", newTask);
+    // console.log("Payload NEW Task", newTask);
     try {
       const response = await axios.post(
         "https://work-asana-backend.vercel.app/api/tasks",
         newTask
       );
-      console.log("API Response:", response.data);
+      // console.log("API Response:", response.data);
 
       if (!response.data) {
         return rejectWithValue("Failed to create new task: Invalid response");
       }
       return response.data;
     } catch (error) {
-      console.log("error in creating new task", error);
+      console.error("error in creating new task", error);
       return rejectWithValue(error.response?.data?.message || "Request failed");
     }
   }
@@ -55,10 +55,10 @@ export const deleteTask = createAsyncThunk(
       if (!response) {
         return "Failed to delete task";
       }
-      console.log("response data from delete task:", response.data);
+      // console.log("response data from delete task:", response.data);
       return response.data;
     } catch (error) {
-      console.log("error in deleting task", error);
+      console.error("error in deleting task", error);
     }
   }
 );
@@ -71,10 +71,10 @@ export const fetchTaskById = createAsyncThunk(
       const response = await axios.get(
         `https://work-asana-backend.vercel.app/api/tasks/${taskId}`
       );
-      console.log("fetchTaskById response.data", response.data);
+      // console.log("fetchTaskById response.data", response.data);
       return response.data;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return "Error in getting task by ID ";
     }
   }
@@ -89,14 +89,14 @@ export const updateTask = createAsyncThunk(
         `https://work-asana-backend.vercel.app/api/tasks/${taskId}`,
         updatedTask
       );
-      console.log("updated Task response", updatedTask);
+      // console.log("updated Task response", updatedTask);
       if (!response) {
         return "Failed to update the task";
       }
-      console.log("updateTask response", response.data);
+      // console.log("updateTask response", response.data);
       return response.data;
     } catch (error) {
-      console.log("error in update task", error);
+      console.error("error in update task", error);
       return "error while updating the task";
     }
   }
@@ -117,11 +117,11 @@ export const taskSlice = createSlice({
     builder.addCase(fetchTasks.fulfilled, (state, action) => {
       state.status = "success";
       state.tasks = action.payload;
-      console.log("fetch check action :", action.payload);
+      // console.log("fetch check action :", action.payload);
     });
     builder.addCase(fetchTasks.rejected, (state, action) => {
       state.status = "error";
-      console.log("fetchTasks .error.message :- ", action.error.message);
+      // console.log("fetchTasks .error.message :- ", action.error.message);
       state.error = action.error.message;
     });
     // create New Task
@@ -129,10 +129,10 @@ export const taskSlice = createSlice({
       state.status = "loading";
     });
     builder.addCase(createNewTask.fulfilled, (state, action) => {
-      console.log("createNewTask action.payload:", action);
+      // console.log("createNewTask action.payload:", action);
       if (action.payload) {
         state.status = "success";
-        console.log("action.payload of task view: ", action.payload);
+        // console.log("action.payload of task view: ", action.payload);
         state.tasks.push(action.payload);
       } else {
         console.error("Received an invalid payload");
@@ -151,7 +151,7 @@ export const taskSlice = createSlice({
       state.tasks = state.tasks.filter(
         (task) => task._id !== action.payload.deletedTask._id
       );
-      console.log("action.payload of deleteTask: ", action.payload.deletedTask);
+      // console.log("action.payload of deleteTask: ", action.payload.deletedTask);
     });
     builder.addCase(deleteTask.rejected, (state, action) => {
       state.status = "error";
@@ -163,7 +163,7 @@ export const taskSlice = createSlice({
     });
     builder.addCase(fetchTaskById.fulfilled, (state, action) => {
       state.status = "success";
-      console.log("fetchTaskById action.payload", action.payload);
+      // console.log("fetchTaskById action.payload", action.payload);
       state.tasks = action.payload;
     });
     builder.addCase(fetchTaskById.rejected, (state, action) => {
@@ -184,7 +184,7 @@ export const taskSlice = createSlice({
           state.tasks[index] = action.payload;
         }
       }
-      console.log("updateTask action.payload", action.payload);
+      // console.log("updateTask action.payload", action.payload);
     });
     builder.addCase(updateTask.rejected, (state, action) => {
       state.status = "error";

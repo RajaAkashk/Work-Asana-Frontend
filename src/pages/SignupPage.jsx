@@ -15,7 +15,7 @@ function SignupPage() {
 
   const handleSingup = async (e) => {
     e.preventDefault();
-    console.log("Email:", email, "Password:", password);
+    // console.log("Email:", email, "Password:", password);
 
     const user = {
       name: name,
@@ -27,7 +27,7 @@ function SignupPage() {
         "https://work-asana-backend.vercel.app/api/users/register",
         user
       );
-      console.log("response.data:- ", response.data);
+      // console.log("response.data:- ", response.data);
 
       if (response.data) {
         setMessage("Register successful");
@@ -104,6 +104,7 @@ function SignupPage() {
                     placeholder="Enter email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
                     required
                   />
                 </div>
@@ -119,6 +120,7 @@ function SignupPage() {
                     className="form-control"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
                     required
                   />
                 </div>

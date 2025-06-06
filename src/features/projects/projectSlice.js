@@ -48,7 +48,7 @@ export const deleteProject = createAsyncThunk(
       if (!response) {
         return "Failed to delete project";
       }
-      console.log("response.data while deleting project", response.data);
+      // console.log("response.data while deleting project", response.data);
       return response.data;
     } catch (error) {
       console.log("Error occured while deleting project", error);
@@ -132,7 +132,7 @@ export const projectSlice = createSlice({
     });
     builder.addCase(deleteProject.fulfilled, (state, action) => {
       state.status = "success";
-      console.log("deleteProject", action.payload);
+      // console.log("deleteProject", action.payload);
       state.projects = state.projects.filter(
         (project) => project._id !== action.payload._id
       );
@@ -147,7 +147,7 @@ export const projectSlice = createSlice({
     });
     builder.addCase(fetchProjectById.fulfilled, (state, action) => {
       state.status = "success";
-      console.log("fetchProjectById action.payload", action.payload);
+      // console.log("fetchProjectById action.payload", action.payload);
       state.projects = action.payload;
     });
     builder.addCase(fetchProjectById.rejected, (state, action) => {
@@ -170,7 +170,7 @@ export const projectSlice = createSlice({
           state.projects[index] = action.payload;
         }
       }
-      console.log("updateProject action.payload", action.payload);
+      // console.log("updateProject action.payload", action.payload);
     });
     builder.addCase(updateProject.rejected, (state, action) => {
       state.status = "error";

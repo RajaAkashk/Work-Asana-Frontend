@@ -11,7 +11,7 @@ export const fetchUser = createAsyncThunk("get/fetchUser", async () => {
     }
     return response.data;
   } catch (error) {
-    console.log("error in fetching users.", error);
+    console.error("error in fetching users.", error);
   }
 });
 

@@ -24,12 +24,12 @@ const EditProjectPage = () => {
       setProjectName(projects.name || "");
       setProjectDescription(projects.description || "");
       setProjectStatus(projects.status || "Not Started");
-      console.log(
-        "State updated:",
-        projects.name,
-        projects.description,
-        projects.status
-      );
+      // console.log(
+      //   "State updated:",
+      //   projects.name,
+      //   projects.description,
+      //   projects.status
+      // );
     }
   }, [projects]);
 

@@ -14,14 +14,15 @@ const EditTaskPage = () => {
   const dispatch = useDispatch();
 
   const { tasks, loading, error } = useSelector((state) => state.tasks);
-  console.log("tasks EditTaskPage ", tasks);
+  // console.log("tasks EditTaskPage ", tasks);
 
   const {
     users,
     loading: userLoading,
     error: userError,
   } = useSelector((state) => state.users);
-  console.log("users from edit task", users);
+  // console.log("users from edit task", users);
+
 
   const ownerOptions = users.map((user) => ({
     value: user._id,
@@ -33,7 +34,7 @@ const EditTaskPage = () => {
     loading: teamLoading,
     error: teamError,
   } = useSelector((state) => state.teams);
-  console.log("task Edit page teams:-", teams);
+  // console.log("task Edit page teams:-", teams);
 
   const teamOptions = teams.map((teamOption) => ({
     value: teamOption._id,
@@ -51,7 +52,7 @@ const EditTaskPage = () => {
     label: projectOption.name,
   }));
 
-  console.log("taskId", taskId);
+  // console.log("taskId", taskId);
 
   const [message, setMessage] = useState(false);
   const [taskName, setTaskName] = useState("");
@@ -89,7 +90,7 @@ const EditTaskPage = () => {
       setPriority(tasks.priority || "Low");
     }
   }, [tasks]);
-  console.log("defaultOwners:- ", owners);
+  // console.log("defaultOwners:- ", owners);
 
   useEffect(() => {
     if (taskId) {
@@ -102,19 +103,19 @@ const EditTaskPage = () => {
 
   const handleUpdateTask = (e) => {
     e.preventDefault();
-    console.log("Updating Task with:", {
-      taskId,
-      updatedTask: {
-        name: taskName,
-        project: project.value,
-        team: team.value,
-        owners: owners.map((owner) => owner.value),
-        tags,
-        timeToComplete,
-        status,
-        priority,
-      },
-    });
+    // console.log("Updating Task with:", {
+    //   taskId,
+    //   updatedTask: {
+    //     name: taskName,
+    //     project: project.value,
+    //     team: team.value,
+    //     owners: owners.map((owner) => owner.value),
+    //     tags,
+    //     timeToComplete,
+    //     status,
+    //     priority,
+    //   },
+    // });
     dispatch(
       updateTask({
         taskId,
@@ -183,7 +184,7 @@ const EditTaskPage = () => {
                     value={project || ""}
                     options={projectOptions || []}
                     onChange={(selected) => setProject(selected)}
-                    onMenuOpen={() => console.log("Menu Opened")}
+                    // onMenuOpen={() => console.log("Menu Opened")}
                   />
                 </div>
 
@@ -198,7 +199,7 @@ const EditTaskPage = () => {
                     value={team || ""}
                     options={teamOptions || []}
                     onChange={(selected) => setTeam(selected)}
-                    onMenuOpen={() => console.log("Menu Opened")}
+                    // onMenuOpen={() => console.log("Menu Opened")}
                   />
                 </div>
 
@@ -214,7 +215,7 @@ const EditTaskPage = () => {
                     value={owners || []}
                     options={ownerOptions || []}
                     onChange={(selected) => setOwners(selected)}
-                    onMenuOpen={() => console.log("Menu Opened")}
+                    // onMenuOpen={() => console.log("Menu Opened")}
                   />
                 </div>
 
